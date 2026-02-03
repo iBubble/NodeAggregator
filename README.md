@@ -68,6 +68,10 @@ node app.js
 *   `external/` - 外部爬虫脚本
 *   `proxies.json` - 节点数据存储
 
+## 💐 Acknowledgements
+
+*   本项目的部分核心采集逻辑（位于 `external/aggregator` 目录）派生自 [wzdnzd/aggregator](https://github.com/wzdnzd/aggregator)。感谢原作者的开源贡献！
+
 ## 📝 License
 
 Private Project. Created for personal use.
