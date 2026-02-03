@@ -1,0 +1,1060 @@
+[[emoji]]
+match = "(?i:Bandwidth|expire|流量|时间|应急|过期)"
+emoji = "🏳️‍🌈"
+
+[[emoji]]
+match = "(?i:\\bHK[G]?\\b|Hong.*?Kong|\\bHKT\\b|\\bHKBN\\b|\\bHGC\\b|\\bWTT\\b|\\bCMI\\b|[^-]港)"
+emoji = "🇭🇰"
+
+[[emoji]]
+match = "(?i:\\bTW[N]?\\b|Taiwan|新北|彰化|\\bCHT\\b|台湾|台灣|[^-]台|\\bHINET\\b)"
+emoji = "🇹🇼"
+
+[[emoji]]
+match = "(?i:\\bSG[P]?\\b|Singapore|新加坡|狮城|[^-]新)"
+emoji = "🇸🇬"
+
+[[emoji]]
+match = "(尼日利亚|Nigeria)"
+emoji = "🇳🇬"
+
+[[emoji]]
+match = "(?i:\\bJP[N]?\\b|Japan|Tokyo|Osaka|Saitama|日本|东京|大阪|埼玉|[^-]日)"
+emoji = "🇯🇵"
+
+[[emoji]]
+match = "(?i:\\bK[O]?R\\b|Korea|首尔|春川|韩|韓)"
+emoji = "🇰🇷"
+
+[[emoji]]
+match = "(?i:\\bUS[A]?\\b|America|United.*?States|美国|美國|[^-]美|美西|美东|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|洛杉磯|圣何塞|圣克拉拉|西雅图|芝加哥|纽约|旧金山)"
+emoji = "🇺🇸"
+
+[[emoji]]
+match = "(Ascension|阿森松)"
+emoji = "🇦🇨"
+
+[[emoji]]
+match = "(?i:\\bUAE\\b|Dubai|阿联酋|迪拜)"
+emoji = "🇦🇪"
+
+[[emoji]]
+match = "(阿尔巴尼亚|Albania)"
+emoji = "🇦🇱"
+
+[[emoji]]
+match = "(Argentina|阿根廷)"
+emoji = "🇦🇷"
+
+[[emoji]]
+match = "(Austria|Vienna|奥地利|维也纳)"
+emoji = "🇦🇹"
+
+[[emoji]]
+match = "(?i:\\bAU[S]?\\b|Australia|Sydney|澳大利亚|澳洲|悉尼|墨尔本)"
+emoji = "🇦🇺"
+
+[[emoji]]
+match = "(阿塞拜疆|Azerbaijan)"
+emoji = "🇦🇿"
+
+[[emoji]]
+match = "(波黑共和国|波士尼亚与赫塞哥维纳|Bosnia|Herzegovina)"
+emoji = "🇧🇦"
+
+[[emoji]]
+match = "(Belgium|比利时)"
+emoji = "🇧🇪"
+
+[[emoji]]
+match = "(保加利亚|Bulgaria)"
+emoji = "🇧🇬"
+
+[[emoji]]
+match = "(Brazil|Paulo|巴西|圣保罗)"
+emoji = "🇧🇷"
+
+[[emoji]]
+match = "(?i:\\bCA[N]?\\b|Canada|Toronto|Montreal|Vancouver|加拿大|蒙特利尔|温哥华|楓葉|枫叶)"
+emoji = "🇨🇦"
+
+[[emoji]]
+match = "(Switzerland|Zurich|瑞士|苏黎世)"
+emoji = "🇨🇭"
+
+[[emoji]]
+match = "(智利|Chile)"
+emoji = "🇨🇱"
+
+[[emoji]]
+match = "(Colombia|哥伦比亚)"
+emoji = "🇨🇴"
+
+[[emoji]]
+match = "(Costa Rica|哥斯达黎加)"
+emoji = "🇨🇷"
+
+[[emoji]]
+match = "(塞浦路斯|Cyprus)"
+emoji = "🇨🇾"
+
+[[emoji]]
+match = "(Czech|捷克)"
+emoji = "🇨🇿"
+
+[[emoji]]
+match = "(?i:\\bDE[U]?\\b|Germany|法兰克福|德(国|意志)|中德|^德$)"
+emoji = "🇩🇪"
+
+[[emoji]]
+match = "(?i:\\bD[N]?K\\b|Denmark|丹麦)"
+emoji = "🇩🇰"
+
+[[emoji]]
+match = "(爱沙尼亚|Estonia)"
+emoji = "🇪🇪"
+
+[[emoji]]
+match = "(埃及|Egypt)"
+emoji = "🇪🇬"
+
+[[emoji]]
+match = "(?i:\\bES[P]?\\b|Spain|西班牙)"
+emoji = "🇪🇸"
+
+[[emoji]]
+match = "(Europe|欧洲)"
+emoji = "🇪🇺"
+
+[[emoji]]
+match = "(Finland|Helsinki|芬兰|赫尔辛基)"
+emoji = "🇫🇮"
+
+[[emoji]]
+match = "(?i:\\bFR[A]?\\b|France|Paris|法国|英國|巴黎)"
+emoji = "🇫🇷"
+
+[[emoji]]
+match = "(?i:\\bUK\\b|\\bGB[R]?\\b|England|United.*?Kingdom|London|英国|[^-]英|伦敦)"
+emoji = "🇬🇧"
+
+[[emoji]]
+match = "(希腊|Greece)"
+emoji = "🇬🇷"
+
+[[emoji]]
+match = "(格鲁吉亚|Georgia)"
+emoji = "🇬🇪"
+
+[[emoji]]
+match = "(克罗地亚|Croatia)"
+emoji = "🇭🇷"
+
+[[emoji]]
+match = "(Hungary|匈牙利)"
+emoji = "🇭🇺"
+
+[[emoji]]
+match = "(Indonesia|Jakarta|印尼|印度尼西亚|雅加达)"
+emoji = "🇮🇩"
+
+[[emoji]]
+match = "(Ireland|Dublin|爱尔兰|都柏林)"
+emoji = "🇮🇪"
+
+[[emoji]]
+match = "(Israel|以色列)"
+emoji = "🇮🇱"
+
+[[emoji]]
+match = "(马恩岛|Mann)"
+emoji = "🇮🇲"
+
+[[emoji]]
+match = "(?i:\\bIN[D]?\\b|India|Mumbai|印度|孟买|加尔各答|贾坎德|泰米尔纳德)"
+emoji = "🇮🇳"
+
+[[emoji]]
+match = "(伊朗|Iran)"
+emoji = "🇮🇷"
+
+[[emoji]]
+match = "(?i:\\bIS[L]?\\b|Iceland|冰岛)"
+emoji = "🇮🇸"
+
+[[emoji]]
+match = "(Italy|Milan|意大利|米兰)"
+emoji = "🇮🇹"
+
+[[emoji]]
+match = "(约旦|Jordan)"
+emoji = "🇯🇴"
+
+[[emoji]]
+match = "(肯尼亚|Kenya)"
+emoji = "🇰🇪"
+
+[[emoji]]
+match = "(吉尔吉斯斯坦|Kyrgyzstan)"
+emoji = "🇰🇬"
+
+[[emoji]]
+match = "(柬埔寨|Cambodia)"
+emoji = "🇰🇭"
+
+
+[[emoji]]
+match = "(North.*?Korea|朝鲜)"
+emoji = "🇰🇵"
+
+[[emoji]]
+match = "(哈萨克斯坦|Kazakhstan)"
+emoji = "🇰🇿"
+
+[[emoji]]
+match = "(立陶宛|Lietuvos)"
+emoji = "🇱🇹"
+
+[[emoji]]
+match = "(卢森堡|Luxemburg|Luxembourg)"
+emoji = "🇱🇺"
+
+[[emoji]]
+match = "(拉脱维亚|Latvia)"
+emoji = "🇱🇻"
+
+[[emoji]]
+match = "(Moldova|摩尔多瓦)"
+emoji = "🇲🇩"
+
+[[emoji]]
+match = "(北马其顿|Macedonia)"
+emoji = "🇲🇰"
+
+[[emoji]]
+match = "(蒙古|Монголулс|Mongolia)"
+emoji = "🇲🇳"
+
+[[emoji]]
+match = "(Macao|澳门|\\bCTM\\b)"
+emoji = "🇲🇴"
+
+[[emoji]]
+match = "(墨西哥|Mexico)"
+emoji = "🇲🇽"
+
+[[emoji]]
+match = "(Malaysia|马来|MY)"
+emoji = "🇲🇾"
+
+[[emoji]]
+match = "(?i:\\bNL[D]?\\b|Netherlands|荷兰|阿姆斯特丹)"
+emoji = "🇳🇱"
+
+[[emoji]]
+match = "(挪威|Norway)"
+emoji = "🇳🇴"
+
+[[emoji]]
+match = "(新西兰|纽西兰|New Zealand)"
+emoji = "🇳🇿"
+
+[[emoji]]
+match = "(Philippines|菲律宾)"
+emoji = "🇵🇭"
+
+[[emoji]]
+match = "(Pakistan|巴基斯坦)"
+emoji = "🇵🇰"
+
+[[emoji]]
+match = "(?i:\\bP[O]?L\\b|Poland|波兰)"
+emoji = "🇵🇱"
+
+[[emoji]]
+match = "(巴拿马|Panama)"
+emoji = "🇵🇦"
+
+[[emoji]]
+match = "(秘鲁|Peru)"
+emoji = "🇵🇪"
+
+[[emoji]]
+match = "(葡萄牙|Portugal)"
+emoji = "🇵🇹"
+
+[[emoji]]
+match = "(Romania|罗马尼亚)"
+emoji = "🇷🇴"
+
+[[emoji]]
+match = "(塞尔维亚|Serbia)"
+emoji = "🇷🇸"
+
+[[emoji]]
+match = "(?i:\\bRU[S]?\\b|Russia|Moscow|Petersburg|Siberia|伯力|莫斯科|圣彼得堡|西伯利亚|新西伯利亚|哈巴罗夫斯克|俄罗斯|俄羅斯|[^-]俄)"
+emoji = "🇷🇺"
+
+[[emoji]]
+match = "(Arabia|沙特)"
+emoji = "🇸🇦"
+
+[[emoji]]
+match = "(Sweden|瑞典)"
+emoji = "🇸🇪"
+
+[[emoji]]
+match = "(斯洛文尼亚|Slovenia)"
+emoji = "🇸🇮"
+
+[[emoji]]
+match = "(斯洛伐克|Slovensko)"
+emoji = "🇸🇰"
+
+[[emoji]]
+match = "(Thailand|泰国|曼谷)"
+emoji = "🇹🇭"
+
+[[emoji]]
+match = "(突尼斯|Tunisia)"
+emoji = "🇹🇳"
+
+[[emoji]]
+match = "(Turkey|土耳其|伊斯坦布尔)"
+emoji = "🇹🇷"
+
+[[emoji]]
+match = "(乌拉圭|Uruguay)"
+emoji = "🇺🇾"
+
+[[emoji]]
+match = "(Vietnam|越南)"
+emoji = "🇻🇳"
+
+[[emoji]]
+match = "(Africa|南非)"
+emoji = "🇿🇦"
+
+[[emoji]]
+match = "(Ukraine|UA|乌克兰)"
+emoji = "🇺🇦"
+
+[[emoji]]
+match = "(Puerto.*?Rico|波多黎各)"
+emoji = "🇵🇷"
+
+[[emoji]]
+match = "(Ecuador|厄瓜多尔)"
+emoji = "🇪🇨"
+
+
+[[emoji]]
+match = "(Morocco|摩洛哥)"
+emoji = "🇲🇦"
+
+
+[[emoji]]
+match = "(Nepal|尼泊尔)"
+emoji = "🇳🇵"
+
+
+[[emoji]]
+match = "(Bengal|孟加拉)"
+emoji = "🇧🇩"
+
+
+[[emoji]]
+match = "(Mauritius|毛里求斯)"
+emoji = "🇲🇺"
+
+
+[[emoji]]
+match = "(Guatemala|危地马拉)"
+emoji = "🇬🇹"
+
+
+[[emoji]]
+match = "(Seychelles|塞舌尔)"
+emoji = "🇸🇨"
+
+
+[[emoji]]
+match = "(\\bTogo\\b|Togolese|多哥)"
+emoji = "🇹🇬"
+
+
+[[emoji]]
+match = "(Liechtenstein|列支敦士登)"
+emoji = "🇱🇮"
+
+
+[[emoji]]
+match = "(Gibraltar|直布罗陀)"
+emoji = "🇬🇮"
+
+
+[[emoji]]
+match = "(Saint|Kitts|Nevis|圣基茨和尼维斯)"
+emoji = "🇰🇳"
+
+
+[[emoji]]
+match = "(Qatar|卡塔尔)"
+emoji = "🇶🇦"
+
+
+[[emoji]]
+match = "(Bahrain|巴林)"
+emoji = "🇧🇭"
+
+
+[[emoji]]
+match = "(Laos|老挝)"
+emoji = "🇱🇦"
+
+
+[[emoji]]
+match = "(Myanmar|缅甸)"
+emoji = "🇲🇲"
+
+
+[[emoji]]
+match = "(Malta|马耳他)"
+emoji = "🇲🇹"
+
+
+[[emoji]]
+match = "(Bolivia|玻利维亚)"
+emoji = "🇧🇴"
+
+
+[[emoji]]
+match = "(Lebanon|黎巴嫩)"
+emoji = "🇱🇧"
+
+
+[[emoji]]
+match = "(Iraq|伊拉克)"
+emoji = "🇮🇶"
+
+
+[[emoji]]
+match = "(Uzbekistan|乌兹别克斯坦)"
+emoji = "🇺🇿"
+
+
+[[emoji]]
+match = "(Tajikistan|塔吉克斯坦)"
+emoji = "🇹🇯"
+
+
+[[emoji]]
+match = "(Algeria|阿尔及利亚)"
+emoji = "🇩🇿"
+
+
+[[emoji]]
+match = "(Angola|安哥拉)"
+emoji = "🇦🇴"
+
+
+[[emoji]]
+match = "(French Guiana|法属圭亚那)"
+emoji = "🇬🇫"
+
+
+[[emoji]]
+match = "(Guiana|圭亚那)"
+emoji = "🇬🇾"
+
+
+[[emoji]]
+match = "(Greenland|格陵兰)"
+emoji = "🇬🇱"
+
+
+[[emoji]]
+match = "(Honduras|洪都拉斯)"
+emoji = "🇭🇳"
+
+
+# Generated by OpenAI
+
+[[emoji]]
+match = "(Rwanda|卢旺达)"
+emoji = "🇷🇼"
+
+
+[[emoji]]
+match = "(Tanzania|坦桑尼亚)"
+emoji = "🇹🇿"
+
+
+[[emoji]]
+match = "(Brunei|文莱)"
+emoji = "🇧🇳"
+
+
+[[emoji]]
+match = "(Fiji|Suva|斐济)"
+emoji = "🇫🇯"
+
+
+[[emoji]]
+match = "(Reunion|留尼汪)"
+emoji = "🇷🇪"
+
+
+[[emoji]]
+match = "(Kuwait|科威特)"
+emoji = "🇰🇼"
+
+
+[[emoji]]
+match = "(Martinique|马提尼克)"
+emoji = "🇲🇶"
+
+
+[[emoji]]
+match = "(Madagascar|马达加斯加)"
+emoji = "🇲🇬"
+
+
+[[emoji]]
+match = "(Bhutan|不丹)"
+emoji = "🇧🇹"
+
+
+[[emoji]]
+match = "(Timor-Leste|东帝汶)"
+emoji = "🇹🇱"
+
+
+[[emoji]]
+match = "(Central African|中非)"
+emoji = "🇨🇫"
+
+
+[[emoji]]
+match = "(Uganda|乌干达)"
+emoji = "🇺🇬"
+
+
+[[emoji]]
+match = "(Chad|乍得)"
+emoji = "🇹🇩"
+
+
+[[emoji]]
+match = "(Yemen|也门)"
+emoji = "🇾🇪"
+
+
+[[emoji]]
+match = "(Belize|伯利兹)"
+emoji = "🇧🇿"
+
+
+[[emoji]]
+match = "(Cape Verde|佛得角)"
+emoji = "🇨🇻"
+
+
+[[emoji]]
+match = "(Guam|关岛)"
+emoji = "🇬🇺"
+
+
+[[emoji]]
+match = "(Gambia|冈比亚)"
+emoji = "🇬🇲"
+
+
+[[emoji]]
+match = "(Guinea|几内亚)"
+emoji = "🇬🇳"
+
+
+[[emoji]]
+match = "(Guinea-Bissau|几内亚比绍)"
+emoji = "🇬🇼"
+
+
+[[emoji]]
+match = "(Republic of the Congo|刚果共和国)"
+emoji = "🇨🇬"
+
+
+[[emoji]]
+match = "(Democratic Republic of the Congo|刚果民主共和国)"
+emoji = "🇨🇩"
+
+
+[[emoji]]
+match = "(Libya|利比亚)"
+emoji = "🇱🇾"
+
+
+[[emoji]]
+match = "(Liberia|利比里亚)"
+emoji = "🇱🇷"
+
+
+[[emoji]]
+match = "(Ghana|加纳)"
+emoji = "🇬🇭"
+
+
+[[emoji]]
+match = "(Gabon|加蓬)"
+emoji = "🇬🇦"
+
+
+[[emoji]]
+match = "(Northern Mariana|北马里亚纳群岛)"
+emoji = "🇲🇵"
+
+
+[[emoji]]
+match = "(South Sudan|南苏丹)"
+emoji = "🇸🇸"
+
+
+[[emoji]]
+match = "(Botswana|博茨瓦纳)"
+emoji = "🇧🇼"
+
+
+[[emoji]]
+match = "(Eritrea|厄立特里亚)"
+emoji = "🇪🇷"
+
+
+[[emoji]]
+match = "(Cuba|古巴)"
+emoji = "🇨🇺"
+
+
+[[emoji]]
+match = "(Djibouti|吉布提)"
+emoji = "🇩🇯"
+
+
+[[emoji]]
+match = "(Cameroon|喀麦隆)"
+emoji = "🇨🇲"
+
+
+[[emoji]]
+match = "(Turkmenistan|土库曼斯坦)"
+emoji = "🇹🇲"
+
+
+[[emoji]]
+match = "(Saint Lucia|圣卢西亚)"
+emoji = "🇱🇨"
+
+
+[[emoji]]
+match = "(Saint Barthelemy|圣巴泰勒米)"
+emoji = "🇧🇱"
+
+
+[[emoji]]
+match = "(Saint Vincent and the Grenadines|圣文森特和格林纳丁斯)"
+emoji = "🇻🇨"
+
+
+[[emoji]]
+match = "(Saint Pierre and Miquelon|圣皮埃尔和密克隆)"
+emoji = "🇵🇲"
+
+
+[[emoji]]
+match = "(San Marino|圣马力诺)"
+emoji = "🇸🇲"
+
+
+[[emoji]]
+match = "(Kiribati|基里巴斯)"
+emoji = "🇰🇮"
+
+
+[[emoji]]
+match = "(Senegal|塞内加尔)"
+emoji = "🇸🇳"
+
+
+[[emoji]]
+match = "(Sierra Leone|塞拉利昂)"
+emoji = "🇸🇱"
+
+
+[[emoji]]
+match = "(Dominica|多米尼克)"
+emoji = "🇩🇲"
+
+
+[[emoji]]
+match = "(Dominican Republic|多米尼加)"
+emoji = "🇩🇴"
+
+
+[[emoji]]
+match = "(Aland|奥兰群岛)"
+emoji = "🇦🇽"
+
+
+[[emoji]]
+match = "(Venezuela|委内瑞拉)"
+emoji = "🇻🇪"
+
+
+[[emoji]]
+match = "(Antigua and Barbuda|安提瓜和巴布达)"
+emoji = "🇦🇬"
+
+
+[[emoji]]
+match = "(Micronesia|密克罗尼西亚)"
+emoji = "🇫🇲"
+
+
+[[emoji]]
+match = "(Nicaragua|尼加拉瓜)"
+emoji = "🇳🇮"
+
+
+[[emoji]]
+match = "(Palestine|巴勒斯坦)"
+emoji = "🇵🇸"
+
+
+[[emoji]]
+match = "(Bahamas|巴哈马)"
+emoji = "🇧🇸"
+
+
+[[emoji]]
+match = "(Barbados|巴巴多斯)"
+emoji = "🇧🇧"
+
+
+[[emoji]]
+match = "(Paraguay|巴拉圭)"
+emoji = "🇵🇾"
+
+
+[[emoji]]
+match = "(Burkina Faso|布基纳法索)"
+emoji = "🇧🇫"
+
+
+[[emoji]]
+match = "(Burundi|布隆迪)"
+emoji = "🇧🇮"
+
+
+[[emoji]]
+match = "(Palau|帕劳)"
+emoji = "🇵🇼"
+
+
+[[emoji]]
+match = "(Cook|库克群岛)"
+emoji = "🇨🇰"
+
+
+[[emoji]]
+match = "(Curacao|库拉索)"
+emoji = "🇨🇼"
+
+
+[[emoji]]
+match = "(Cayman|开曼群岛)"
+emoji = "🇰🇾"
+
+
+[[emoji]]
+match = "(Solomon|所罗门群岛)"
+emoji = "🇸🇧"
+
+
+[[emoji]]
+match = "(Tokelau|托克劳)"
+emoji = "🇹🇰"
+
+
+[[emoji]]
+match = "(Monaco|摩纳哥)"
+emoji = "🇲🇨"
+
+
+[[emoji]]
+match = "(Eswatini|斯威士兰)"
+emoji = "🇸🇿"
+
+
+[[emoji]]
+match = "(Sri Lanka|斯里兰卡)"
+emoji = "🇱🇰"
+
+
+[[emoji]]
+match = "(New Caledonia|新喀里多尼亚)"
+emoji = "🇳🇨"
+
+
+[[emoji]]
+match = "(Guernsey|根西岛)"
+emoji = "🇬🇬"
+
+
+[[emoji]]
+match = "(Grenada|格林纳达)"
+emoji = "🇬🇩"
+
+
+[[emoji]]
+match = "(Vatican City|梵蒂冈)"
+emoji = "🇻🇦"
+
+
+[[emoji]]
+match = "(Mauritania|毛里塔尼亚)"
+emoji = "🇲🇷"
+
+
+[[emoji]]
+match = "(Tonga|汤加)"
+emoji = "🇹🇴"
+
+
+[[emoji]]
+match = "(Saint Martin|法属圣马丁)"
+emoji = "🇲🇫"
+
+
+[[emoji]]
+match = "(French Polynesia|法属波利尼西亚)"
+emoji = "🇵🇫"
+
+
+[[emoji]]
+match = "(Faroe|法罗群岛)"
+emoji = "🇫🇴"
+
+
+[[emoji]]
+match = "(Bosnia and Herzegovina|波黑)"
+emoji = "🇧🇦"
+
+
+[[emoji]]
+match = "(Jersey|泽西岛)"
+emoji = "🇯🇪"
+
+
+[[emoji]]
+match = "(Zimbabwe|津巴布韦)"
+emoji = "🇿🇼"
+
+
+[[emoji]]
+match = "(Haiti|海地)"
+emoji = "🇭🇹"
+
+
+[[emoji]]
+match = "(Jamaica|牙买加)"
+emoji = "🇯🇲"
+
+
+[[emoji]]
+match = "(Turks and Caicos|特克斯和凯科斯群岛)"
+emoji = "🇹🇨"
+
+
+[[emoji]]
+match = "(Trinidad and Tobago|特立尼达和多巴哥)"
+emoji = "🇹🇹"
+
+
+[[emoji]]
+match = "(Nauru|瑙鲁)"
+emoji = "🇳🇷"
+
+
+[[emoji]]
+match = "(Guadeloupe|瓜德罗普)"
+emoji = "🇬🇵"
+
+
+[[emoji]]
+match = "(Wallis and Futuna|瓦利斯和富图纳)"
+emoji = "🇼🇫"
+
+
+[[emoji]]
+match = "(Vanuatu|瓦努阿图)"
+emoji = "🇻🇺"
+
+
+[[emoji]]
+match = "(Bermuda|百慕大)"
+emoji = "🇧🇲"
+
+
+[[emoji]]
+match = "(Falkland|福克兰群岛)"
+emoji = "🇫🇰"
+
+
+[[emoji]]
+match = "(Comoros|科摩罗)"
+emoji = "🇰🇲"
+
+
+[[emoji]]
+match = "(Cote d'Ivoire|科特迪瓦)"
+emoji = "🇨🇮"
+
+
+[[emoji]]
+match = "(Somalia|索马里)"
+emoji = "🇸🇴"
+
+
+[[emoji]]
+match = "(Namibia|纳米比亚)"
+emoji = "🇳🇦"
+
+
+[[emoji]]
+match = "(Niue|纽埃)"
+emoji = "🇳🇺"
+
+
+[[emoji]]
+match = "(U.S. Virgin|美属维尔京群岛)"
+emoji = "🇻🇮"
+
+
+[[emoji]]
+match = "(American Samoa|美属萨摩亚)"
+emoji = "🇦🇸"
+
+
+[[emoji]]
+match = "(Sudan|苏丹)"
+emoji = "🇸🇩"
+
+
+[[emoji]]
+match = "(Suriname|苏里南)"
+emoji = "🇸🇷"
+
+
+[[emoji]]
+match = "(British Virgin|英属维尔京群岛)"
+emoji = "🇻🇬"
+
+
+[[emoji]]
+match = "(Sint Maarten|荷属圣马丁)"
+emoji = "🇸🇽"
+
+
+[[emoji]]
+match = "(Mozambique|莫桑比克)"
+emoji = "🇲🇿"
+
+
+[[emoji]]
+match = "(Lesotho|莱索托)"
+emoji = "🇱🇸"
+
+
+[[emoji]]
+match = "(Salvador|萨尔瓦多)"
+emoji = "🇸🇻"
+
+
+[[emoji]]
+match = "(Samoa|萨摩亚)"
+emoji = "🇼🇸"
+
+
+[[emoji]]
+match = "(Montserrat|蒙特塞拉特)"
+emoji = "🇲🇸"
+
+
+[[emoji]]
+match = "(Norfolk|诺福克岛)"
+emoji = "🇳🇫"
+
+
+[[emoji]]
+match = "(Benin|贝宁)"
+emoji = "🇧🇯"
+
+
+[[emoji]]
+match = "(Equatorial Guinea|赤道几内亚)"
+emoji = "🇬🇶"
+
+
+[[emoji]]
+match = "(Afghanistan|阿富汗)"
+emoji = "🇦🇫"
+
+
+[[emoji]]
+match = "(Oman|阿曼)"
+emoji = "🇴🇲"
+
+
+[[emoji]]
+match = "(Aruba|阿鲁巴)"
+emoji = "🇦🇼"
+
+
+[[emoji]]
+match = "(Maldives|马尔代夫)"
+emoji = "🇲🇻"
+
+
+[[emoji]]
+match = "(Malawi|马拉维)"
+emoji = "🇲🇼"
+
+
+[[emoji]]
+match = "(Mayotte|马约特)"
+emoji = "🇾🇹"
+
+
+[[emoji]]
+match = "(Marshall|马绍尔群岛)"
+emoji = "🇲🇭"
+
+
+[[emoji]]
+match = "(Mali|马里)"
+emoji = "🇲🇱"
+
+
+[[emoji]]
+match = "(Montenegro|黑山)"
+emoji = "🇲🇪"
+
+
+[[emoji]]
+match = "(?i:\\bC[H]?N\\b|China|back|回国|中国[^-]|江苏[^-]|北京[^-]|上海[^-]|广州[^-]|深圳[^-]|杭州[^-]|常州[^-]|徐州[^-]|青岛[^-]|宁波[^-]|镇江[^-]|成都[^-]|河北[^-]|山西[^-]|辽宁[^-]|吉林[^-]|黑龙江[^-]|江苏[^-]|浙江[^-]|安徽[^-]|福建[^-]|江西[^-]|山东[^-]|河南[^-]|湖北[^-]|湖南[^-]|广东[^-]|海南[^-]|四川[^-]|贵州[^-]|云南[^-]|陕西[^-]|甘肃[^-]|青海[^-]|内蒙古[^-]|广西[^-]|西藏[^-]|宁夏[^-]|新疆[^-])"
+emoji = "🇨🇳"
+
+
+[[emoji]]
+match = "((未知|其他)地[区域]|UNKNOWN)"
+emoji = "👽"

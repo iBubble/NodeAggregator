@@ -1,0 +1,29 @@
+name: Checkin
+on:
+  schedule:
+    - cron: "45 02 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+    name: Auto Checkin for Traffic
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          architecture: "x64"
+
+      - name: Run Checkin Script
+        run: |
+          python ./.github/actions/checkin/universal.py || echo "Checkin script failed"
+
+      - name: Record Timestamp
+        run: date "+%Y-%m-%d %H:%M:%S"
