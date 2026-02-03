@@ -1,0 +1,1163 @@
+{
+  "ppy-hkv1.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306685
+  },
+  "ppy-jpv1.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-usv1.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-krv1.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-twv1.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-sgv1.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-hkv2.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-jpv2.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-usv2.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-krv2.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-twv2.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "ppy-sgv2.kunlun02dns.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Vertex Connectivity LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769945306686
+  },
+  "89.44.197.181": {
+    "score": 100,
+    "info": {
+      "countryCode": "BG",
+      "isp": "G core Labs S.A.",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "51.44.120.70": {
+    "score": 50,
+    "info": {
+      "countryCode": "FR",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609005
+  },
+  "2001:bc8:32d7:302::10": {
+    "score": 100,
+    "info": {
+      "countryCode": "FR",
+      "isp": "SCALEWAY S.A.S.",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "jp.xiongchumo.shop": {
+    "score": 100,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Optage Inc.",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "218.50.149.114": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Sk Broadband Co LTD",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "125.141.26.12": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Korea Telecom",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "125.141.31.76": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Korea Telecom",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "221.150.109.22": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Korea Telecom",
+      "hosting": false
+    },
+    "updatedAt": 1769981609005
+  },
+  "210.217.18.68": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Korea Telecom",
+      "hosting": false
+    },
+    "updatedAt": 1769981609006
+  },
+  "121.170.203.136": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Korea Telecom",
+      "hosting": false
+    },
+    "updatedAt": 1769981609006
+  },
+  "203.234.238.147": {
+    "score": 100,
+    "info": {
+      "countryCode": "KR",
+      "isp": "Korea Telecom",
+      "hosting": false
+    },
+    "updatedAt": 1769981609006
+  },
+  "172.67.194.187": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "51.15.17.169": {
+    "score": 100,
+    "info": {
+      "countryCode": "NL",
+      "isp": "SCALEWAY S.A.S.",
+      "hosting": false
+    },
+    "updatedAt": 1769981609006
+  },
+  "cg1c13.waimaojd.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "NL",
+      "isp": "Digitalocean, LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "140.174.186.5": {
+    "score": 60,
+    "info": {
+      "countryCode": "US",
+      "isp": "Psychz Networks",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "104.168.94.41": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "HostPapa",
+      "hosting": false
+    },
+    "updatedAt": 1769981609006
+  },
+  "cg1c02.waimaojd.com": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "Sharktech",
+      "hosting": false
+    },
+    "updatedAt": 1769981609006
+  },
+  "cg1c10.waimaojd.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "US",
+      "isp": "Digitalocean, LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "xiaozhu1.kkieo555.cn": {
+    "score": 50,
+    "info": {
+      "countryCode": "MY",
+      "isp": "Microsoft Corporation",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "6m483-g06.jp04-1d-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "6q2m0-g06.jp02-e3-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "xts2o-g03.jp06-jz-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "f4ix2-g01.jp02-e3-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "1xce7-g03.jp02-e3-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "3gy18-g03.jp03-j7-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "d3g3gzf-g01.jp02-e3-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "qopfzwv-g03.jp06-jz-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "yy3ft-g01.jp03-j7-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "2xj4sef-g03.jp02-e3-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "x0xzzfv-g03.jp06-jz-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "almyk-g06.jp04-1d-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "hce1o-g05.jp05-h6-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "5v8bn-g01.jp04-1d-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "xaeei-g01.jp05-h6-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "zre7b-g05.jp05-h6-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "6lb5as4-g01.jp05-h6-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "7vjur-g01.jp05-h6-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "3evbn-g01.jp07-sh-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "n8kra-g05.jp02-e3-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "smgzgd4-g05.jp07-sh-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "wopw4oh-g03.jp04-1d-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "8kme1cz-g04.jp07-sh-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "d3wq6-g01.jp07-sh-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "9cqgu-g05.jp04-1d-vm0.entry.fr0528.art": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "47.237.0.177": {
+    "score": 60,
+    "info": {
+      "countryCode": "SG",
+      "isp": "Alibaba us Technology Co., Ltd.",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "cg1c12.waimaojd.com": {
+    "score": 60,
+    "info": {
+      "countryCode": "GB",
+      "isp": "Digitalocean, LLC",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "103.186.154.64": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981609006
+  },
+  "103.186.154.201": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.81": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "103.186.155.137": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.143": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.191": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.65": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.39": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.225": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.26": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.163": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.211": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.140": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.183": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.37": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.82": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.66": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.46": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.154.251": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "103.186.155.67": {
+    "score": 60,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Vietpn Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "8.218.34.179": {
+    "score": 60,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Alibaba us Technology Co., Ltd.",
+      "hosting": true
+    },
+    "updatedAt": 1769981610732
+  },
+  "4901d528-t9w4g0-tao3bn-ggww.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "8ce46d62-t9w4g0-tahh2s-tng5.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "3a43b02c-t9w4g0-tc61cs-1tja8.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "ac02ad1a-t9w4g0-td5oia-1m49t.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "609a8c34-t9w4g0-thiwul-1gcq2.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "23958471-t9sf40-tcuz7t-1ta58.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "ac9bceef-t9sf40-tubliy-1la7v.hkt.gotochinatown.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1769981610732
+  },
+  "green2.cdntencentmusic.com": {
+    "score": 100,
+    "info": {
+      "countryCode": "TW",
+      "isp": "Chunghwa Telecom Co., Ltd.",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "136.175.178.165": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Dmit Cloud Services",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "165.1.70.69": {
+    "score": 60,
+    "info": {
+      "countryCode": "US",
+      "isp": "Oracle Corporation",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "165.140.216.141": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "XICOMM LLC",
+      "hosting": false
+    },
+    "updatedAt": 1770025873210
+  },
+  "45.154.204.7": {
+    "score": 60,
+    "info": {
+      "countryCode": "CA",
+      "isp": "Brainstorm Network, INC",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "172.64.144.74": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "209.126.84.189": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "Contabo Inc.",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "15.235.83.228": {
+    "score": 60,
+    "info": {
+      "countryCode": "CA",
+      "isp": "OVH SAS",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "51.79.102.253": {
+    "score": 60,
+    "info": {
+      "countryCode": "CA",
+      "isp": "OVH SAS",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "154.31.114.125": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Dmit Cloud Services",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "162.19.248.238": {
+    "score": 60,
+    "info": {
+      "countryCode": "DE",
+      "isp": "OVH SAS",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "v2ray.codefyinc.com": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "Contabo Inc.",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "tgju.org": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "ccc.922922.shop": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "dddffgthyu.922922.shop": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "ZzXxdE.922922.sHOp": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "46.51.237.24": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "45.89.111.142": {
+    "score": 100,
+    "info": {
+      "countryCode": "GB",
+      "isp": "Worktitans B.V.",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "45.32.158.138": {
+    "score": 60,
+    "info": {
+      "countryCode": "DE",
+      "isp": "The Constant Company, LLC",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "140.82.35.244": {
+    "score": 60,
+    "info": {
+      "countryCode": "DE",
+      "isp": "The Constant Company, LLC",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "beesyar.org": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "Greenhost BV",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "160.191.245.48": {
+    "score": 50,
+    "info": {
+      "countryCode": "VN",
+      "isp": "Hoang Dieu Cloud Computing Company Limited",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "43.199.77.22": {
+    "score": 50,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "13.230.22.2": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "144.31.1.125": {
+    "score": 100,
+    "info": {
+      "countryCode": "PL",
+      "isp": "H NEXUS LTD",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "hgtrojan.zabc.net": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "HostPapa",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "23.95.76.59": {
+    "score": 60,
+    "info": {
+      "countryCode": "CA",
+      "isp": "Brainstorm Network, INC",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "80.173.230.196": {
+    "score": 100,
+    "info": {
+      "countryCode": "NO",
+      "isp": "Servetheworld AS",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "13.113.82.107": {
+    "score": 50,
+    "info": {
+      "countryCode": "JP",
+      "isp": "Amazon.com, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770025873211
+  },
+  "t1.620720.xyz": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "digitalocean.com": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "vc.fly.dev": {
+    "score": 100,
+    "info": {
+      "countryCode": "US",
+      "isp": "Fly.io, Inc.",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "89.31.120.192": {
+    "score": 100,
+    "info": {
+      "countryCode": "AE",
+      "isp": "M Europe SRL",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "80.173.231.254": {
+    "score": 100,
+    "info": {
+      "countryCode": "NO",
+      "isp": "Servetheworld AS",
+      "hosting": false
+    },
+    "updatedAt": 1770007186857
+  },
+  "15.235.41.200": {
+    "score": 60,
+    "info": {
+      "countryCode": "CA",
+      "isp": "OVH SAS",
+      "hosting": true
+    },
+    "updatedAt": 1770007186857
+  },
+  "plcdn11.suio.me": {
+    "score": 100,
+    "info": {
+      "countryCode": "PL",
+      "isp": "H NEXUS LTD",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "167.17.185.172": {
+    "score": 100,
+    "info": {
+      "countryCode": "IS",
+      "isp": "Baxet Group Inc.",
+      "hosting": false
+    },
+    "updatedAt": 1770007186858
+  },
+  "cdnfire.xiaomispeed.com": {
+    "score": 100,
+    "info": {
+      "countryCode": "TW",
+      "isp": "Chunghwa Telecom Co., Ltd.",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "ffc60249-t53wg0-t92wi1-1qkeg.hk2.hyhuawei.com": {
+    "score": 100,
+    "info": {
+      "countryCode": "HK",
+      "isp": "Pccw Ims Limited",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  },
+  "sy4.620720.xyz": {
+    "score": 50,
+    "info": {
+      "countryCode": "US",
+      "isp": "Cloudflare, Inc.",
+      "hosting": true
+    },
+    "updatedAt": 1770007186858
+  },
+  "82.198.246.97": {
+    "score": 60,
+    "info": {
+      "countryCode": "US",
+      "isp": "Datacamp Limited",
+      "hosting": true
+    },
+    "updatedAt": 1770025873210
+  },
+  "82.38.31.208": {
+    "score": 100,
+    "info": {
+      "countryCode": "NL",
+      "isp": "Greenhost BV",
+      "hosting": false
+    },
+    "updatedAt": 1770025873210
+  },
+  "83.143.87.9": {
+    "score": 100,
+    "info": {
+      "countryCode": "NO",
+      "isp": "Servetheworld AS",
+      "hosting": false
+    },
+    "updatedAt": 1770025873211
+  }
+}

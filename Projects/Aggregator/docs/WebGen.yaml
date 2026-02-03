@@ -1,0 +1,1724 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: '*'
+mode: Rule
+log-level: info
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+    - https://9.9.9.9/dns-query
+    - tls://8.8.4.4:853
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+proxies:
+  - name: 英国 V2CROSS.COM
+    type: vmess
+    server: 82.198.246.97
+    port: 180
+    tfo: true
+    skip-cert-verify: true
+    uuid: d13fc2f5-3e05-4795-81eb-44143a09e552
+    alterId: 0
+    cipher: auto
+    network: tcp
+    servername: vc.fly.dev
+  - name: 🇺🇸_US_美国
+    type: vless
+    server: 172.64.144.74
+    port: 443
+    tfo: true
+    skip-cert-verify: true
+    uuid: 68c89f56-3a15-46f2-9901-8c00a2546b97
+    network: ws
+    tls: true
+    servername: rukawa.pages.dev
+    ws-opts:
+      path: /?ed=2560
+      headers:
+        Host: rukawa.pages.dev
+  - name: JP11｜家宽｜非常安全
+    type: hysteria2
+    server: jp.xiongchumo.shop
+    port: 21006
+    tfo: true
+    skip-cert-verify: true
+    password: c24191f6-2d66-44b0-af03-6a66dac2be43
+    sni: jp.xiongchumo.shop
+  - name: 美国 CloudFlare节点
+    type: vmess
+    server: 172.67.204.84
+    port: 8080
+    tfo: true
+    skip-cert-verify: true
+    uuid: nasnet
+    alterId: 0
+    cipher: auto
+    network: ws
+    servername: nasnet-511952424.mcitel.co
+    ws-opts:
+      path: /nasnet/cdn
+      headers:
+        Host: nasnet-511952424.mcitel.co
+  - name: IQ_speednode_0010
+    type: vless
+    server: decdn3.suio.me
+    port: 443
+    tfo: true
+    skip-cert-verify: true
+    uuid: ba9ddd0d-5ffd-4d40-b76d-df32ecb092a1
+    network: tcp
+    tls: true
+    servername: decdn3.suio.me
+  - name: JP8｜家宽｜非常安全
+    type: hysteria2
+    server: jp.xiongchumo.shop
+    port: 21977
+    tfo: true
+    skip-cert-verify: true
+    password: 2e6285da-20a7-4aea-a5f0-20cf44479265
+    sni: jp.xiongchumo.shop
+  - name: JP9｜家宽｜非常安全
+    type: hysteria2
+    server: jp.xiongchumo.shop
+    port: 21293
+    tfo: true
+    skip-cert-verify: true
+    password: 2e6285da-20a7-4aea-a5f0-20cf44479265
+    sni: jp.xiongchumo.shop
+  - name: JP7｜家宽｜非常安全
+    type: hysteria2
+    server: jp.xiongchumo.shop
+    port: 21512
+    tfo: true
+    skip-cert-verify: true
+    password: c24191f6-2d66-44b0-af03-6a66dac2be43
+    sni: jp.xiongchumo.shop
+  - name: JP12｜家宽｜非常安全
+    type: hysteria2
+    server: jp.xiongchumo.shop
+    port: 21545
+    tfo: true
+    skip-cert-verify: true
+    password: 2e6285da-20a7-4aea-a5f0-20cf44479265
+    sni: jp.xiongchumo.shop
+  - name: HK3｜家宽｜非常安全
+    type: trojan
+    server: 58.152.53.45
+    port: 443
+    tfo: true
+    skip-cert-verify: true
+    password: BxceQaOe
+    network: tcp
+    tls: true
+    servername: t.me%252Fripaojiedian
+  - name: JP10｜家宽｜非常安全
+    type: hysteria2
+    server: jp.xiongchumo.shop
+    port: 21512
+    tfo: true
+    skip-cert-verify: true
+    password: 2e6285da-20a7-4aea-a5f0-20cf44479265
+    sni: jp.xiongchumo.shop
+  - name: 🇭🇰 HK
+    type: hysteria2
+    server: ffc60249-t53wg0-t92wi1-1qkeg.hk2.hyhuawei.com
+    port: 443
+    tfo: true
+    skip-cert-verify: true
+    password: a305ac08-d136-11ee-b6db-f23c91cfbbc9
+    sni: ffc60249-t53wg0-t92wi1-1qkeg.hk2.hyhuawei.com
+  - name: 美国 CloudFlare节点_1
+    type: vmess
+    server: digitalocean.com
+    port: 8080
+    tfo: true
+    skip-cert-verify: true
+    uuid: nasnet
+    alterId: 0
+    cipher: auto
+    network: ws
+    servername: nasnet-571299667.rahavard365.co
+    ws-opts:
+      path: /NASNET/cdn?ed=2560
+      headers:
+        Host: nasnet-571299667.rahavard365.co
+  - name: HK32｜家宽｜非常安全
+    type: vmess
+    server: 3f637c17-t94cg0-tcuz7t-1ta58.hkt.gotochinatown.net
+    port: 80
+    tfo: true
+    skip-cert-verify: true
+    uuid: e2d8b574-e089-11ef-9cc7-f23c9164ca5d
+    alterId: 2
+    cipher: auto
+    network: ws
+    servername: broadcastlv.chat.bilibili.com
+    ws-opts:
+      path: /
+      headers:
+        Host: broadcastlv.chat.bilibili.com
+  - name: 日本 V2CROSS.COM
+    type: vmess
+    server: 160.191.245.48
+    port: 58623
+    tfo: true
+    skip-cert-verify: true
+    uuid: 8d74803e-aa74-47ef-e3ae-23eeaa96f89d
+    alterId: 0
+    cipher: auto
+    network: tcp
+  - name: 加拿大+V2CROSS.COM
+    type: trojan
+    server: 167.17.185.172
+    port: 10889
+    tfo: true
+    skip-cert-verify: true
+    password: cTv.9PDdCt-wybBrG1qlxI5UJuaEj
+    network: tcp
+    tls: true
+    servername: web.max.ru
+  - name: HK11｜原生/疑似家宽｜非常安全
+    type: trojan
+    server: green2.cdntencentmusic.com
+    port: 31102
+    tfo: true
+    skip-cert-verify: true
+    password: 5f4142b3-b20f-43f1-bc09-41c0e00662f9
+    network: tcp
+    tls: true
+    servername: green2.cdntencentmusic.com
+  - name: HK16｜原生/疑似家宽｜非常安全
+    type: trojan
+    server: green2.cdntencentmusic.com
+    port: 31102
+    tfo: true
+    skip-cert-verify: true
+    password: 21f085a7-ace6-495e-b550-281c8bfde899
+    network: tcp
+    tls: true
+    servername: green2.cdntencentmusic.com
+  - name: HK14｜原生/疑似家宽｜非常安全
+    type: trojan
+    server: green2.cdntencentmusic.com
+    port: 31102
+    tfo: true
+    skip-cert-verify: true
+    password: 80429ec5-265a-4a99-b0bb-ddc9e75411c0
+    network: tcp
+    tls: true
+    servername: green2.cdntencentmusic.com
+  - name: HK20｜家宽｜非常安全
+    type: trojan
+    server: 219.76.135.98
+    port: 443
+    tfo: true
+    skip-cert-verify: true
+    password: BxceQaOe
+    network: tcp
+    tls: true
+    servername: t.me/ripaojiedian
+  - name: US10｜家宽｜非常安全
+    type: trojan
+    server: green2.cdntencentmusic.com
+    port: 35501
+    tfo: true
+    skip-cert-verify: true
+    password: 3692ef88-4d16-4848-a01b-b646f9448b11
+    network: tcp
+    tls: true
+    servername: green2.cdntencentmusic.com
+  - name: 🇭🇰 香港|@ripaojiedian
+    type: vmess
+    server: v10.hdacd.com
+    port: 30807
+    tfo: true
+    skip-cert-verify: true
+    uuid: cbb3f877-d1fb-344c-87a9-d153bffd5484
+    alterId: 2
+    cipher: auto
+    network: tcp
+  - name: HK12｜原生/疑似家宽｜非常安全
+    type: trojan
+    server: green2.cdntencentmusic.com
+    port: 31101
+    tfo: true
+    skip-cert-verify: true
+    password: 14f7a5c0-e8ae-40a7-884c-41555730e3b6
+    network: tcp
+    tls: true
+    servername: green2.cdntencentmusic.com
+  - name: US18｜机房｜低风险
+    type: vmess
+    server: 154.83.2.156
+    port: 2086
+    tfo: true
+    skip-cert-verify: true
+    uuid: 92373ed1-78a8-4cbe-aa06-54af1edd0471
+    alterId: 0
+    cipher: auto
+    network: ws
+    servername: v205.19740822.xyz
+    ws-opts:
+      path: /
+      headers:
+        Host: v205.19740822.xyz
+  - name: 台湾省台中市+中华电信
+    type: trojan
+    server: green2.cdntencentmusic.com
+    port: 31102
+    tfo: true
+    skip-cert-verify: true
+    password: 19fcde52-c498-4863-8fb1-5923c75dec39
+    network: tcp
+    tls: true
+    servername: green2.cdntencentmusic.com
+  - name: 防失联 https://ppy.369.cyou
+    type: vmess
+    server: 127.0.0.1
+    port: 80
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|香港01解锁
+    type: vmess
+    server: ppy-hkv1.kunlun02dns.com
+    port: 26010
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|香港02解锁
+    type: vmess
+    server: ppy-hkv1.kunlun02dns.com
+    port: 26011
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|香港03解锁
+    type: vmess
+    server: ppy-hkv1.kunlun02dns.com
+    port: 26012
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|香港04解锁
+    type: vmess
+    server: ppy-hkv1.kunlun02dns.com
+    port: 26013
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|香港05解锁
+    type: vmess
+    server: ppy-hkv1.kunlun02dns.com
+    port: 26014
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|香港06解锁
+    type: vmess
+    server: ppy-hkv1.kunlun02dns.com
+    port: 26015
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|日本01解锁
+    type: vmess
+    server: ppy-jpv1.kunlun02dns.com
+    port: 26006
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|日本02解锁
+    type: vmess
+    server: ppy-jpv1.kunlun02dns.com
+    port: 26007
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|日本03解锁
+    type: vmess
+    server: ppy-jpv1.kunlun02dns.com
+    port: 26008
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|日本04解锁
+    type: vmess
+    server: ppy-jpv1.kunlun02dns.com
+    port: 26009
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|美��01解锁
+    type: vmess
+    server: ppy-usv1.kunlun02dns.com
+    port: 26001
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|美国02解锁
+    type: vmess
+    server: ppy-usv1.kunlun02dns.com
+    port: 26002
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|美国03解锁
+    type: vmess
+    server: ppy-usv1.kunlun02dns.com
+    port: 26003
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|美国04解锁
+    type: vmess
+    server: ppy-usv1.kunlun02dns.com
+    port: 26004
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|韩国01解锁
+    type: vmess
+    server: ppy-krv1.kunlun02dns.com
+    port: 26072
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|韩国02解锁
+    type: vmess
+    server: ppy-krv1.kunlun02dns.com
+    port: 26073
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|韩国03解锁
+    type: vmess
+    server: ppy-krv1.kunlun02dns.com
+    port: 26074
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|韩国04解锁
+    type: vmess
+    server: ppy-krv1.kunlun02dns.com
+    port: 26075
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|台湾01解锁
+    type: vmess
+    server: ppy-twv1.kunlun02dns.com
+    port: 26059
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|台湾02解锁
+    type: vmess
+    server: ppy-twv1.kunlun02dns.com
+    port: 26060
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|台湾03解锁
+    type: vmess
+    server: ppy-twv1.kunlun02dns.com
+    port: 26061
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|台湾04解锁
+    type: vmess
+    server: ppy-twv1.kunlun02dns.com
+    port: 26062
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|新加坡01解锁
+    type: vmess
+    server: ppy-sgv1.kunlun02dns.com
+    port: 26020
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|新加坡02解锁
+    type: vmess
+    server: ppy-sgv1.kunlun02dns.com
+    port: 26021
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|新加坡03解锁
+    type: vmess
+    server: ppy-sgv1.kunlun02dns.com
+    port: 26022
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 标准|新加坡04解锁
+    type: vmess
+    server: ppy-sgv1.kunlun02dns.com
+    port: 26023
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|香港01解锁
+    type: vmess
+    server: ppy-hkv2.kunlun02dns.com
+    port: 26010
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|香港02解锁
+    type: vmess
+    server: ppy-hkv2.kunlun02dns.com
+    port: 26011
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|香港03解锁
+    type: vmess
+    server: ppy-hkv2.kunlun02dns.com
+    port: 26012
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|香港04解锁
+    type: vmess
+    server: ppy-hkv2.kunlun02dns.com
+    port: 26013
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|香港05解锁
+    type: vmess
+    server: ppy-hkv2.kunlun02dns.com
+    port: 26014
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|香港06解锁
+    type: vmess
+    server: ppy-hkv2.kunlun02dns.com
+    port: 26015
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|日本01解锁
+    type: vmess
+    server: ppy-jpv2.kunlun02dns.com
+    port: 26006
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|日本02解锁
+    type: vmess
+    server: ppy-jpv2.kunlun02dns.com
+    port: 26007
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|日本03解锁
+    type: vmess
+    server: ppy-jpv2.kunlun02dns.com
+    port: 26008
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|日本04解锁
+    type: vmess
+    server: ppy-jpv2.kunlun02dns.com
+    port: 26009
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|美国01解锁
+    type: vmess
+    server: ppy-usv2.kunlun02dns.com
+    port: 26001
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|美国02解锁
+    type: vmess
+    server: ppy-usv2.kunlun02dns.com
+    port: 26002
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|美国03解锁
+    type: vmess
+    server: ppy-usv2.kunlun02dns.com
+    port: 26003
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|美国04解锁
+    type: vmess
+    server: ppy-usv2.kunlun02dns.com
+    port: 26004
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|韩国01解锁
+    type: vmess
+    server: ppy-krv2.kunlun02dns.com
+    port: 26072
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|韩国02解锁
+    type: vmess
+    server: ppy-krv2.kunlun02dns.com
+    port: 26073
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|韩国03解锁
+    type: vmess
+    server: ppy-krv2.kunlun02dns.com
+    port: 26074
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|韩国04解锁
+    type: vmess
+    server: ppy-krv2.kunlun02dns.com
+    port: 26075
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|台湾01解锁
+    type: vmess
+    server: ppy-twv2.kunlun02dns.com
+    port: 26059
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|台湾02解锁
+    type: vmess
+    server: ppy-twv2.kunlun02dns.com
+    port: 26060
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|台湾03解锁
+    type: vmess
+    server: ppy-twv2.kunlun02dns.com
+    port: 26061
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|台湾04解锁
+    type: vmess
+    server: ppy-twv2.kunlun02dns.com
+    port: 26062
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|新加坡01解锁
+    type: vmess
+    server: ppy-sgv2.kunlun02dns.com
+    port: 26020
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|新加坡02解锁
+    type: vmess
+    server: ppy-sgv2.kunlun02dns.com
+    port: 26021
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|新加坡03解锁
+    type: vmess
+    server: ppy-sgv2.kunlun02dns.com
+    port: 26022
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|新加坡04解锁
+    type: vmess
+    server: ppy-sgv2.kunlun02dns.com
+    port: 26023
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|丹麦01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26149
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|南非01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26086
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|印度01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26132
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|巴林01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26138
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|巴西01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26134
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|希腊01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26130
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|德国01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26112
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|挪威01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26140
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|捷克01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26100
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|智力01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26147
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|法国01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26143
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|波兰01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26096
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|泰国01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26108
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|瑞典01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26141
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|瑞士01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26104
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|秘鲁01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26155
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|芬兰01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26136
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|英国01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26116
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|荷兰01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26098
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|越南01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26076
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|乌克兰01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26106
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|以色列01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26145
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|俄罗斯01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26090
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|加拿大01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26114
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|土耳其01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26092
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|墨西哥01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26148
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|奥地利01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26128
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|意大利01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26142
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|柬埔寨01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26082
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|比利时01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26150
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|爱尔兰01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26151
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|立陶宛01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26153
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|菲律宾01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26080
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|葡萄牙01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26154
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|西班牙01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26126
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|阿根廷01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26122
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|阿联酋01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26078
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|保加利亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26094
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|哥伦比亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26124
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|孟加拉国01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26084
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|巴基斯坦01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26135
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|拉脱维亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26102
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|澳大利亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26110
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|爱沙尼亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26152
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|罗马尼亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26146
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|阿塞拜疆01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26139
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|马斯喀特01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26133
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|马来西亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26137
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|印度尼西亚01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26144
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+  - name: 专线|沙特阿拉伯01倍率5
+    type: vmess
+    server: ppy-boardv2.kunlun02dns.com
+    port: 26088
+    tfo: true
+    skip-cert-verify: true
+    udp: true
+    uuid: f5f26521-6dac-3b14-96b0-f1c7ad47746d
+    alterId: 0
+    cipher: auto
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - DIRECT
+      - 英国 V2CROSS.COM
+      - 🇺🇸_US_美国
+      - JP11｜家宽｜非常安全
+      - 美国 CloudFlare节点
+      - IQ_speednode_0010
+      - JP8｜家宽｜非常安全
+      - JP9｜家宽｜非常安全
+      - JP7｜家宽｜非常安全
+      - JP12｜家宽｜非常安全
+      - HK3｜家宽｜非常安全
+      - JP10｜家宽｜非常安全
+      - 🇭🇰 HK
+      - 美国 CloudFlare节点_1
+      - HK32｜家宽｜非常安全
+      - 日本 V2CROSS.COM
+      - 加拿大+V2CROSS.COM
+      - HK11｜原生/疑似家宽｜非常安全
+      - HK16｜原生/疑似家宽｜非常安全
+      - HK14｜原生/疑似家宽｜非常安全
+      - HK20｜家宽｜非常安全
+      - US10｜家宽｜非常安全
+      - 🇭🇰 香港|@ripaojiedian
+      - HK12｜原生/疑似家宽｜非常安全
+      - US18｜机房｜低风险
+      - 台湾省台中市+中华电信
+      - 防失联 https://ppy.369.cyou
+      - 标准|香港01解锁
+      - 标准|香港02解锁
+      - 标准|香港03解锁
+      - 标准|香港04解锁
+      - 标准|香港05解锁
+      - 标准|香港06解锁
+      - 标准|日本01解锁
+      - 标准|日本02解锁
+      - 标准|日本03解锁
+      - 标准|日本04解锁
+      - 标准|美��01解锁
+      - 标准|美国02解锁
+      - 标准|美国03解锁
+      - 标准|美国04解锁
+      - 标准|韩国01解锁
+      - 标准|韩国02解锁
+      - 标准|韩国03解锁
+      - 标准|韩国04解锁
+      - 标准|台湾01解锁
+      - 标准|台湾02解锁
+      - 标准|台湾03解锁
+      - 标准|台湾04解锁
+      - 标准|新加坡01解锁
+      - 标准|新加坡02解锁
+      - 标准|新加坡03解锁
+      - 标准|新加坡04解锁
+      - 专线|香港01解锁
+      - 专线|香港02解锁
+      - 专线|香港03解锁
+      - 专线|香港04解锁
+      - 专线|香港05解锁
+      - 专线|香港06解锁
+      - 专线|日本01解锁
+      - 专线|日本02解锁
+      - 专线|日本03解锁
+      - 专线|日本04解锁
+      - 专线|美国01解锁
+      - 专线|美国02解锁
+      - 专线|美国03解锁
+      - 专线|美国04解锁
+      - 专线|韩国01解锁
+      - 专线|韩国02解锁
+      - 专线|韩国03解锁
+      - 专线|韩国04解锁
+      - 专线|台湾01解锁
+      - 专线|台湾02解锁
+      - 专线|台湾03解锁
+      - 专线|台湾04解锁
+      - 专线|新加坡01解锁
+      - 专线|新加坡02解锁
+      - 专线|新加坡03解锁
+      - 专线|新加坡04解锁
+      - 专线|丹麦01倍率5
+      - 专线|南非01倍率5
+      - 专线|印度01倍率5
+      - 专线|巴林01倍率5
+      - 专线|巴西01倍率5
+      - 专线|希腊01倍率5
+      - 专线|德国01倍率5
+      - 专线|挪威01倍率5
+      - 专线|捷克01倍率5
+      - 专线|智力01倍率5
+      - 专线|法国01倍率5
+      - 专线|波兰01倍率5
+      - 专线|泰国01倍率5
+      - 专线|瑞典01倍率5
+      - 专线|瑞士01倍率5
+      - 专线|秘鲁01倍率5
+      - 专线|芬兰01倍率5
+      - 专线|英国01倍率5
+      - 专线|荷兰01倍率5
+      - 专线|越南01倍率5
+      - 专线|乌克兰01倍率5
+      - 专线|以色列01倍率5
+      - 专线|俄罗斯01倍率5
+      - 专线|加拿大01倍率5
+      - 专线|土耳其01倍率5
+      - 专线|墨西哥01倍率5
+      - 专线|奥地利01倍率5
+      - 专线|意大利01倍率5
+      - 专线|柬埔寨01倍率5
+      - 专线|比利时01倍率5
+      - 专线|爱尔兰01倍率5
+      - 专线|立陶宛01倍率5
+      - 专线|菲律宾01倍率5
+      - 专线|葡萄牙01倍率5
+      - 专线|西班牙01倍率5
+      - 专线|阿根廷01倍率5
+      - 专线|阿联酋01倍率5
+      - 专线|保加利亚01倍率5
+      - 专线|哥伦比亚01倍率5
+      - 专线|孟加拉国01倍率5
+      - 专线|巴基斯坦01倍率5
+      - 专线|拉脱维亚01倍率5
+      - 专线|澳大利亚01倍率5
+      - 专线|爱沙尼亚01倍率5
+      - 专线|罗马尼亚01倍率5
+      - 专线|阿塞拜疆01倍率5
+      - 专线|马斯喀特01倍率5
+      - 专线|马来西亚01倍率5
+      - 专线|印度尼西亚01倍率5
+      - 专线|沙特阿拉伯01倍率5
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - 英国 V2CROSS.COM
+      - 🇺🇸_US_美国
+      - JP11｜家宽｜非常安全
+      - 美国 CloudFlare节点
+      - IQ_speednode_0010
+      - JP8｜家宽｜非常安全
+      - JP9｜家宽｜非常安全
+      - JP7｜家宽｜非常安全
+      - JP12｜家宽｜非常安全
+      - HK3｜家宽｜非常安全
+      - JP10｜家宽｜非常安全
+      - 🇭🇰 HK
+      - 美国 CloudFlare节点_1
+      - HK32｜家宽｜非常安全
+      - 日本 V2CROSS.COM
+      - 加拿大+V2CROSS.COM
+      - HK11｜原生/疑似家宽｜非常安全
+      - HK16｜原生/疑似家宽｜非常安全
+      - HK14｜原生/疑似家宽｜非常安全
+      - HK20｜家宽｜非常安全
+      - US10｜家宽｜非常安全
+      - 🇭🇰 香港|@ripaojiedian
+      - HK12｜原生/疑似家宽｜非常安全
+      - US18｜机房｜低风险
+      - 台湾省台中市+中华电信
+      - 防失联 https://ppy.369.cyou
+      - 标准|香港01解锁
+      - 标准|香港02解锁
+      - 标准|香港03解锁
+      - 标准|香港04解锁
+      - 标准|香港05解锁
+      - 标准|香港06解锁
+      - 标准|日本01解锁
+      - 标准|日本02解锁
+      - 标准|日本03解锁
+      - 标准|日本04解锁
+      - 标准|美��01解锁
+      - 标准|美国02解锁
+      - 标准|美国03解锁
+      - 标准|美国04解锁
+      - 标准|韩国01解锁
+      - 标准|韩国02解锁
+      - 标准|韩国03解锁
+      - 标准|韩国04解锁
+      - 标准|台湾01解锁
+      - 标准|台湾02解锁
+      - 标准|台湾03解锁
+      - 标准|台湾04解锁
+      - 标准|新加坡01解锁
+      - 标准|新加坡02解锁
+      - 标准|新加坡03解锁
+      - 标准|新加坡04解锁
+      - 专线|香港01解锁
+      - 专线|香港02解锁
+      - 专线|香港03解锁
+      - 专线|香港04解锁
+      - 专线|香港05解锁
+      - 专线|香港06解锁
+      - 专线|日本01解锁
+      - 专线|日本02解锁
+      - 专线|日本03解锁
+      - 专线|日本04解锁
+      - 专线|美国01解锁
+      - 专线|美国02解锁
+      - 专线|美国03解锁
+      - 专线|美国04解锁
+      - 专线|韩国01解锁
+      - 专线|韩国02解锁
+      - 专线|韩国03解锁
+      - 专线|韩国04解锁
+      - 专线|台湾01解锁
+      - 专线|台湾02解锁
+      - 专线|台湾03解锁
+      - 专线|台湾04解锁
+      - 专线|新加坡01解锁
+      - 专线|新加坡02解锁
+      - 专线|新加坡03解锁
+      - 专线|新加坡04解锁
+      - 专线|丹麦01倍率5
+      - 专线|南非01倍率5
+      - 专线|印度01倍率5
+      - 专线|巴林01倍率5
+      - 专线|巴西01倍率5
+      - 专线|希腊01倍率5
+      - 专线|德国01倍率5
+      - 专线|挪威01倍率5
+      - 专线|捷克01倍率5
+      - 专线|智力01倍率5
+      - 专线|法国01倍率5
+      - 专线|波兰01倍率5
+      - 专线|泰国01倍率5
+      - 专线|瑞典01倍率5
+      - 专线|瑞士01倍率5
+      - 专线|秘鲁01倍率5
+      - 专线|芬兰01倍率5
+      - 专线|英国01倍率5
+      - 专线|荷兰01倍率5
+      - 专线|越南01倍率5
+      - 专线|乌克兰01倍率5
+      - 专线|以色列01倍率5
+      - 专线|俄罗斯01倍率5
+      - 专线|加拿大01倍率5
+      - 专线|土耳其01倍率5
+      - 专线|墨西哥01倍率5
+      - 专线|奥地利01倍率5
+      - 专线|意大利01倍率5
+      - 专线|柬埔寨01倍率5
+      - 专线|比利时01倍率5
+      - 专线|爱尔兰01倍率5
+      - 专线|立陶宛01倍率5
+      - 专线|菲律宾01倍率5
+      - 专线|葡萄牙01倍率5
+      - 专线|西班牙01倍率5
+      - 专线|阿根廷01倍率5
+      - 专线|阿联酋01倍率5
+      - 专线|保加利亚01倍率5
+      - 专线|哥伦比亚01倍率5
+      - 专线|孟加拉国01倍率5
+      - 专线|巴基斯坦01倍率5
+      - 专线|拉脱维亚01倍率5
+      - 专线|澳大利亚01倍率5
+      - 专线|爱沙尼亚01倍率5
+      - 专线|罗马尼亚01倍率5
+      - 专线|阿塞拜疆01倍率5
+      - 专线|马斯喀特01倍率5
+      - 专线|马来西亚01倍率5
+      - 专线|印度尼西亚01倍率5
+      - 专线|沙特阿拉伯01倍率5
+  - name: 🌍 国外媒体
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 英国 V2CROSS.COM
+      - 🇺🇸_US_美国
+      - JP11｜家宽｜非常安全
+      - 美国 CloudFlare节点
+      - IQ_speednode_0010
+      - JP8｜家宽｜非常安全
+      - JP9｜家宽｜非常安全
+      - JP7｜家宽｜非常安全
+      - JP12｜家宽｜非常安全
+      - HK3｜家宽｜非常安全
+      - JP10｜家宽｜非常安全
+      - 🇭🇰 HK
+      - 美国 CloudFlare节点_1
+      - HK32｜家宽｜非常安全
+      - 日本 V2CROSS.COM
+      - 加拿大+V2CROSS.COM
+      - HK11｜原生/疑似家宽｜非常安全
+      - HK16｜原生/疑似家宽｜非常安全
+      - HK14｜原生/疑似家宽｜非常安全
+      - HK20｜家宽｜非常安全
+      - US10｜家宽｜非常安全
+      - 🇭🇰 香港|@ripaojiedian
+      - HK12｜原生/疑似家宽｜非常安全
+      - US18｜机房｜低风险
+      - 台湾省台中市+中华电信
+      - 防失联 https://ppy.369.cyou
+      - 标准|香港01解锁
+      - 标准|香港02解锁
+      - 标准|香港03解锁
+      - 标准|香港04解锁
+      - 标准|香港05解锁
+      - 标准|香港06解锁
+      - 标准|日本01解锁
+      - 标准|日本02解锁
+      - 标准|日本03解锁
+      - 标准|日本04解锁
+      - 标准|美��01解锁
+      - 标准|美国02解锁
+      - 标准|美国03解锁
+      - 标准|美国04解锁
+      - 标准|韩国01解锁
+      - 标准|韩国02解锁
+      - 标准|韩国03解锁
+      - 标准|韩国04解锁
+      - 标准|台湾01解锁
+      - 标准|台湾02解锁
+      - 标准|台湾03解锁
+      - 标准|台湾04解锁
+      - 标准|新加坡01解锁
+      - 标准|新加坡02解锁
+      - 标准|新加坡03解锁
+      - 标准|新加坡04解锁
+      - 专线|香港01解锁
+      - 专线|香港02解锁
+      - 专线|香港03解锁
+      - 专线|香港04解锁
+      - 专线|香港05解锁
+      - 专线|香港06解锁
+      - 专线|日本01解锁
+      - 专线|日本02解锁
+      - 专线|日本03解锁
+      - 专线|日本04解锁
+      - 专线|美国01解锁
+      - 专线|美国02解锁
+      - 专线|美国03解锁
+      - 专线|美国04解锁
+      - 专线|韩国01解锁
+      - 专线|韩国02解锁
+      - 专线|韩国03解锁
+      - 专线|韩国04解锁
+      - 专线|台湾01解锁
+      - 专线|台湾02解锁
+      - 专线|台湾03解锁
+      - 专线|台湾04解锁
+      - 专线|新加坡01解锁
+      - 专线|新加坡02解锁
+      - 专线|新加坡03解锁
+      - 专线|新加坡04解锁
+      - 专线|丹麦01倍率5
+      - 专线|南非01倍率5
+      - 专线|印度01倍率5
+      - 专线|巴林01倍率5
+      - 专线|巴西01倍率5
+      - 专线|希腊01倍率5
+      - 专线|德国01倍率5
+      - 专线|挪威01倍率5
+      - 专线|捷克01倍率5
+      - 专线|智力01倍率5
+      - 专线|法国01倍率5
+      - 专线|波兰01倍率5
+      - 专线|泰国01倍率5
+      - 专线|瑞典01倍率5
+      - 专线|瑞士01倍率5
+      - 专线|秘鲁01倍率5
+      - 专线|芬兰01倍率5
+      - 专线|英国01倍率5
+      - 专线|荷兰01倍率5
+      - 专线|越南01倍率5
+      - 专线|乌克兰01倍率5
+      - 专线|以色列01倍率5
+      - 专线|俄罗斯01倍率5
+      - 专线|加拿大01倍率5
+      - 专线|土耳其01倍率5
+      - 专线|墨西哥01倍率5
+      - 专线|奥地利01倍率5
+      - 专线|意大利01倍率5
+      - 专线|柬埔寨01倍率5
+      - 专线|比利时01倍率5
+      - 专线|爱尔兰01倍率5
+      - 专线|立陶宛01倍率5
+      - 专线|菲律宾01倍率5
+      - 专线|葡萄牙01倍率5
+      - 专线|西班牙01倍率5
+      - 专线|阿根廷01倍率5
+      - 专线|阿联酋01倍率5
+      - 专线|保加利亚01倍率5
+      - 专线|哥伦比亚01倍率5
+      - 专线|孟加拉国01倍率5
+      - 专线|巴基斯坦01倍率5
+      - 专线|拉脱维亚01倍率5
+      - 专线|澳大利亚01倍率5
+      - 专线|爱沙尼亚01倍率5
+      - 专线|罗马尼亚01倍率5
+      - 专线|阿塞拜疆01倍率5
+      - 专线|马斯喀特01倍率5
+      - 专线|马来西亚01倍率5
+      - 专线|印度尼西亚01倍率5
+      - 专线|沙特阿拉伯01倍率5
+rules:
+  - DOMAIN-SUFFIX,cn,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,🚀 节点选择

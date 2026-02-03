@@ -1,0 +1,225 @@
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: Rule
+log-level: info
+external-controller: ':9090'
+dns:
+  enable: true
+  nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+proxies:
+  - name: 未知22
+    server: 172.67.131.108
+    port: 443
+    type: vmess
+    tls: true
+    skip-cert-verify: true
+    servername: glweidf.cfd
+    network: ws
+    ws-opts:
+      path: /linkws
+      headers:
+        Host: glweidf.cfd
+    uuid: 1052f24e-7b09-45eb-b0c5-d858eb124192
+    alterId: 0
+    cipher: auto
+  - name: 🇹🇼TW台湾2
+    server: green2.cdntencentmusic.com
+    port: 31103
+    type: trojan
+    password: 0500c7b4-083f-4746-a98a-abfbdc755da9
+  - name: SS Node
+    server: 4.223.100.248
+    port: 48172
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: 51yloQC8D9w1Wae7FHtI65
+  - name: 🇳🇴NO挪威
+    server: 83.143.87.9
+    port: 18581
+    type: trojan
+    tls: true
+    skip-cert-verify: true
+    servername: 83.143.87.9
+    password: RPyW62_b9aH.ztJKeArou
+  - name: 未知24
+    server: 104.21.83.208
+    port: 443
+    type: vmess
+    tls: true
+    skip-cert-verify: true
+    servername: afrhms16v.bestxray.buzz
+    network: ws
+    ws-opts:
+      path: /linkws
+      headers:
+        Host: afrhms16v.bestxray.buzz
+    uuid: f584de15-2034-4170-a723-f48c2bae5e0f
+    alterId: 0
+    cipher: auto
+  - name: SS Node_5
+    server: 135.225.124.80
+    port: 48172
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: 51yloQC8D9w1Wae7FHtI65
+  - name: SS Node_6
+    server: arxfw2b78fi2q9hzylhn.freesocks.work
+    port: 443
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: Nk9asglDzHzjktVzTkvhaA
+  - name: 未知27
+    server: fapeng.org
+    port: 443
+    type: vmess
+    tls: true
+    skip-cert-verify: true
+    servername: fapeng.org
+    network: ws
+    ws-opts:
+      path: linkvws
+      headers:
+        Host: fapeng.org
+    uuid: 03fcc618-b93d-6796-6aed-8a38c975d581
+    alterId: 0
+    cipher: auto
+  - name: SS Node_8
+    server: 145.133.64.171
+    port: 443
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: kaQH3hGdcP80XEDI
+  - name: 🇪🇸ES西班牙3
+    server: 109.234.211.66
+    port: 2087
+    type: trojan
+    password: trojan
+  - name: SS Node_10
+    server: 144.217.164.29
+    port: 12000
+    type: ss
+    cipher: aes-256-gcm
+    password: 8JCsPssfgS8tiRwiMlhARg==
+  - name: 🇪🇸ES西班牙4 2.0MB/s
+    server: 80.173.231.254
+    port: 12420
+    type: trojan
+    password: wp9IsiY82uQhcmgNC1eoBM
+  - name: 未知29
+    server: 47.83.18.10
+    port: 36968
+    type: vmess
+    network: ws
+    ws-opts:
+      path: /arki?ed=2048
+    uuid: 176bf1dd-647f-4c09-892e-5f9223dc8617
+    alterId: 0
+    cipher: auto
+  - name: SS Node_13
+    server: 79.127.233.170
+    port: 990
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: f8f7aCzcPKbsF8p3
+  - name: SS Node_14
+    server: 92.223.62.214
+    port: 11201
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: 6134494027689bbb
+  - name: 🇭🇰HK香港5
+    server: tuntro000.instconn.com
+    port: 443
+    type: trojan
+    password: 30077070-596e-48ea-9400-14c8ed07bd97
+  - name: 🇨🇦CA加拿大3
+    server: 167.17.185.228
+    port: 10889
+    type: trojan
+    tls: true
+    skip-cert-verify: true
+    servername: web.max
+    password: cTv.9PDdCt-wybBrG1qlxI5UJuaEj
+  - name: 未知31
+    server: serkat.org
+    port: 443
+    type: vmess
+    tls: true
+    skip-cert-verify: true
+    servername: serkat.org
+    network: ws
+    ws-opts:
+      path: linkvws
+      headers:
+        Host: serkat.org
+    uuid: 03fcc618-b93d-6796-6aed-8a38c975d581
+    alterId: 0
+    cipher: auto
+  - name: 未知32
+    server: 104.21.15.36
+    port: 443
+    type: vmess
+    tls: true
+    skip-cert-verify: true
+    servername: linde06.indiavideo.sbs
+    network: ws
+    ws-opts:
+      path: /linkws
+      headers:
+        Host: linde06.indiavideo.sbs
+    uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf
+    alterId: 0
+    cipher: auto
+  - name: 🇨🇦CA加拿大4
+    server: tuntro006.instconn.com
+    port: 443
+    type: trojan
+    password: 30077070-596e-48ea-9400-14c8ed07bd97
+  - name: SS Node_20
+    server: admin.c2.havij.co
+    port: 443
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: kaQH3hGdcP80XEDI
+  - name: SS Node_21
+    server: pupas-shirting-unsung.freesocks.work
+    port: 443
+    type: ss
+    cipher: chacha20-ietf-poly1305
+    password: p78naCf2EfOlRSLTX0wFVx
+  - name: 未知33 43.1KB/s
+    server: 160.16.81.84
+    port: 5076
+    type: trojan
+    tls: true
+    skip-cert-verify: true
+    servername: www.nintendogames.net
+    password: 869e9086806483ca4744a4cb0f3d6e16
+rules:
+  - SRC-PORT,40000,未知22
+  - SRC-PORT,40001,🇹🇼TW台湾2
+  - SRC-PORT,40002,SS Node
+  - SRC-PORT,40003,🇳🇴NO挪威
+  - SRC-PORT,40004,未知24
+  - SRC-PORT,40005,SS Node_5
+  - SRC-PORT,40006,SS Node_6
+  - SRC-PORT,40007,未知27
+  - SRC-PORT,40008,SS Node_8
+  - SRC-PORT,40009,🇪🇸ES西班牙3
+  - SRC-PORT,40010,SS Node_10
+  - SRC-PORT,40011,🇪🇸ES西班牙4 2.0MB/s
+  - SRC-PORT,40012,未知29
+  - SRC-PORT,40013,SS Node_13
+  - SRC-PORT,40014,SS Node_14
+  - SRC-PORT,40015,🇭🇰HK香港5
+  - SRC-PORT,40016,🇨🇦CA加拿大3
+  - SRC-PORT,40017,未知31
+  - SRC-PORT,40018,未知32
+  - SRC-PORT,40019,🇨🇦CA加拿大4
+  - SRC-PORT,40020,SS Node_20
+  - SRC-PORT,40021,SS Node_21
+  - SRC-PORT,40022,未知33 43.1KB/s
+  - MATCH,DIRECT

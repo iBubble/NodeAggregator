@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity 机场聚合器 Web 版</title>
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%239333ea'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath fill='white' transform='scale(0.7) translate(5,5)' d='M2.5,19h19v2h-19V19z M22.07,9.64c-0.21-0.8-1.04-1.28-1.84-1.06L14.92,10l-6.9-6.4C7.65,3.23,7.12,3,6.56,3h-0.03c-0.89,0-1.42,0.92-1.03,1.67L8.71,10L4.22,10L2.1,8.35C1.65,8.02,1.01,8.12,0.67,8.56l0,0c-0.34,0.44-0.25,1.06,0.2,1.39l4.52,3.31C5.82,12.58,6.38,13,7.5,13h12.5c1.1,0,2-0.9,2-2l0,0C22,10.55,22.07,10.09,22.07,9.64z'/%3E%3C/svg%3E">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            /* slate-900 */
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-input {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: #818cf8;
+            /* indigo-400 */
+            box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(71, 85, 105, 0.8);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.8);
+        }
+
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-enter-from,
+        .fade-leave-to {
+            opacity: 0;
+        }
+
+        .list-enter-active,
+        .list-leave-active {
+            transition: all 0.4s ease;
+        }
+
+        .list-enter-from,
+        .list-leave-to {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 850: '#151e2e' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="text-slate-200 min-h-screen">
+    <div id="app" class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <header class="mb-10 flex flex-col md:flex-row justify-between items-center animate-fade-in-down">
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <span class="material-icons-round text-white text-3xl">flight_takeoff</span>
+                </div>
+                <div>
+                    <h1
+                        class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
+                        Airport Aggregator
+                    </h1>
+                    <p class="text-slate-400 text-sm">Web Edition • Antigravity</p>
+                </div>
+            </div>
+            <div class="flex space-x-3">
+                <button @click="showImportParams = !showImportParams"
+                    class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition flex items-center text-sm">
+                    <span class="material-icons-round text-base mr-2">settings</span>
+                    设置
+                </button>
+                <div class="relative group">
+                    <div
+                        class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt">
+                    </div>
+                    <button @click="showExportModal = true"
+                        class="relative px-6 py-2 bg-slate-900 rounded-lg leading-none flex items-center divide-x divide-gray-600 hover:bg-slate-800 transition">
+                        <span class="flex items-center space-x-2 text-indigo-100">
+                            <span class="material-icons-round text-base">cloud_download</span>
+                            <span class="pr-2">导出配置</span>
+                        </span>
+                        <span class="pl-2 block text-indigo-400 text-xs">Clash / Singbox</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Sidebar / Controls -->
+            <div class="lg:col-span-4 space-y-6">
+                <!-- Cloud Aggregation Card -->
+                <div class="glass-panel p-6 rounded-2xl shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
+                    <div class="flex items-center justify-between mb-4 relative z-10">
+                        <h2 class="text-lg font-semibold text-white flex items-center">
+                            <span class="material-icons-round text-blue-400 mr-2">cloud_sync</span>
+                            云端自动聚合
+                        </h2>
+                        <button @click="showLogModal = true"
+                            class="bg-white/10 hover:bg-white/20 text-slate-300 p-2 rounded-lg transition-colors border border-white/5"
+                            title="查看日志">
+                            <span class="material-icons-round text-sm">terminal</span>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-400 mb-4 relative z-10">
+                        自动从 GitHub、公开源抓取免费节点。基于 Aggregator 核心逻辑。
+                    </p>
+                    <div class="flex flex-col space-y-3">
+                        <button @click="refreshCloud" :disabled="cloudLoading"
+                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transform transition-all active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed group">
+                            <span
+                                class="material-icons-round text-xl group-hover:rotate-180 transition-transform duration-500">sync</span>
+                            <span>{{ cloudLoading ? '更新中...' : '立即更新 Github 节点' }}</span>
+                        </button>
+
+                        <button @click="fetchAllNodes" :disabled="cloudLoading"
+                            class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transform transition-all active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed group">
+                            <span class="material-icons-round text-xl animate-pulse">public</span>
+                            <span>全网获取节点 (Free Style)</span>
+                        </button>
+                    </div>
+
+                    <div v-if="cloudResult" class="mt-3 text-center text-xs text-emerald-400 animate-fade-in mb-2">
+                        {{ cloudResult }}
+                    </div>
+
+                    <div
+                        class="mt-2 pt-3 border-t border-white/10 flex flex-col space-y-1 text-[10px] text-slate-400 font-mono bg-black/20 p-2 rounded">
+                        <div class="flex justify-between">
+                            <span>自动更新: 每6小时</span>
+                            <span v-if="serverStats.nextUpdate" class="text-indigo-300">
+                                下次: {{ formatTime(serverStats.nextUpdate) }}
+                            </span>
+                        </div>
+                        <div v-if="serverStats.lastUpdated" class="flex justify-between text-slate-500">
+                            <span>上次完成: {{ serverStats.active }} 个可用</span>
+                            <span>{{ formatTime(serverStats.lastUpdated) }}</span>
+                        </div>
+                    </div>
+                    <!-- Linux.do 导入按钮 -->
+                    <div class="mt-3">
+                        <button @click="importFromLinuxDo" :disabled="linuxDoLoading"
+                            class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-medium shadow-lg shadow-purple-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center">
+                            <span v-if="linuxDoLoading"
+                                class="material-icons-round animate-spin mr-2 text-base">refresh</span>
+                            <span class="material-icons-round mr-2 text-base" v-if="!linuxDoLoading">forum</span>
+                            {{ linuxDoLoading ? '正在抓取...' : '从 Linux.do 导入' }}
+                        </button>
+                    </div>
+
+
+                    <div class="mt-3">
+                        <button @click="checkLocalConnectivity" :disabled="isLocalChecking"
+                            class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium shadow-lg shadow-emerald-600/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center">
+                            <span v-if="isLocalChecking"
+                                class="material-icons-round animate-spin mr-2 text-base">refresh</span>
+                            {{ isLocalChecking ? `测试中 ${localCheckProgress}` : '🚀 服务器直连测试 (Server Test)' }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input Card -->
+                <div class="glass-panel p-6 rounded-2xl shadow-xl">
+                    <h2 class="text-lg font-semibold text-white mb-4 flex items-center">
+                        <span class="material-icons-round text-indigo-400 mr-2">add_link</span>
+                        手动添加订阅
+                    </h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">订阅链接 (URL)</label>
+                            <input v-model="inputUrl" type="text"
+                                placeholder="https://airport.com/api/v1/client/subscribe..."
+                                class="w-full px-4 py-3 rounded-xl glass-input placeholder-slate-600 text-sm">
+                        </div>
+
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                <div class="w-full border-t border-slate-700"></div>
+                            </div>
+                            <div class="relative flex justify-center">
+                                <span class="bg-slate-800 px-2 text-xs text-slate-500 rounded-full">或</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1">原始内容 (Base64/VMess)</label>
+                            <textarea v-model="rawContent" rows="4" placeholder="vmess://... 或 base64 string"
+                                class="w-full px-4 py-3 rounded-xl glass-input placeholder-slate-600 text-sm font-mono"></textarea>
+                        </div>
+
+                        <button @click="parseContent" :disabled="loading"
+                            class="w-full py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-medium transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center">
+                            <span v-if="loading" class="material-icons-round animate-spin mr-2 text-base">refresh</span>
+                            {{ loading ? '解析中...' : '解析并导入' }}
+                        </button>
+
+                        <p v-if="errorMsg" class="text-red-400 text-xs mt-2 flex items-center">
+                            <span class="material-icons-round text-sm mr-1">error_outline</span>
+                            {{ errorMsg }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats Card -->
+                <div v-if="proxies.length > 0" class="glass-panel p-6 rounded-2xl shadow-xl animate-fade-in-up">
+                    <h2 class="text-lg font-semibold text-white mb-4 flex items-center">
+                        <span class="material-icons-round text-emerald-400 mr-2">analytics</span>
+                        节点统计
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-800/50 p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold text-white">{{ proxies.length }}</div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">总节点</div>
+                        </div>
+                        <div class="bg-slate-800/50 p-4 rounded-xl text-center">
+                            <div class="text-3xl font-bold text-indigo-400">{{ protocols.length }}</div>
+                            <div class="text-xs text-slate-400 uppercase tracking-wider mt-1">协议类型</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2">
+                        <div v-for="(count, type) in protocolStats" :key="type"
+                            class="flex items-center justify-between text-sm">
+                            <span class="text-slate-400 uppercase">{{ type }}</span>
+                            <div class="flex items-center">
+                                <div class="w-24 h-1.5 bg-slate-700 rounded-full mr-3 overflow-hidden">
+                                    <div class="h-full bg-indigo-500 rounded-full"
+                                        :style="{ width: (count / proxies.length * 100) + '%' }"></div>
+                                </div>
+                                <span class="text-white font-mono">{{ count }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button @click="clearProxies"
+                        class="w-full mt-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 text-sm transition">
+                        清空所有节点
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content / List -->
+            <div class="lg:col-span-8">
+                <div v-if="proxies.length === 0"
+                    class="h-full flex flex-col items-center justify-center text-center p-10 border-2 border-dashed border-slate-700 rounded-3xl opacity-50">
+                    <span class="material-icons-round text-6xl text-slate-600 mb-4">dns</span>
+                    <h3 class="text-xl font-medium text-slate-300">暂无节点数据</h3>
+                    <p class="text-slate-500 mt-2 max-w-sm">请在左侧添加订阅链接或粘贴原始内容以开始使用。</p>
+                </div>
+
+                <div v-else class="space-y-4">
+
+                    <!-- Protocol Filters -->
+                    <div class="flex flex-wrap gap-2 mb-2 animate-fade-in">
+                        <button @click="filterType = 'all'"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold transition border uppercase flex items-center shadow-sm"
+                            :class="filterType === 'all' ? 'bg-indigo-600 border-indigo-600 text-white shadow-indigo-500/30' : 'bg-slate-800 border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600'">
+                            All Protocols
+                            <span class="ml-2 bg-black/20 px-1.5 rounded text-[10px]">{{ totalVisibleCount }}</span>
+                        </button>
+                        <button v-for="proto in protocols" :key="proto" @click="filterType = proto"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold transition border uppercase flex items-center shadow-sm"
+                            :class="filterType === proto ? getProtocolBadgeColor(proto).replace('text-slate-900', 'text-white border-transparent shadow-lg') : 'bg-slate-800 border-slate-700/50 text-slate-400 hover:text-white hover:border-slate-600'">
+                            {{ proto }}
+                            <span class="ml-2 bg-black/20 px-1.5 rounded text-[10px]">{{ protocolStats[proto] }}</span>
+                        </button>
+                    </div>
+
+                    <!-- Country Filter (Dropdown) -->
+                    <div v-if="countries.length > 0" class="mb-6 animate-fade-in relative max-w-xs">
+                        <select v-model="filterCountry"
+                            class="w-full bg-slate-800 border border-slate-700/50 rounded-xl pl-4 pr-10 py-2.5 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500/50 outline-none appearance-none transition shadow-inner cursor-pointer font-bold">
+                            <option value="all">🌍 全球所有地区 ({{ proxiesByType.length }})</option>
+                            <option v-for="c in countries" :key="c" :value="c">
+                                {{ c }} ({{ countryStats[c] }})
+                            </option>
+                        </select>
+                        <span
+                            class="absolute right-3 top-3 text-slate-500 material-icons-round text-sm pointer-events-none">expand_more</span>
+                    </div>
+
+                    <!-- Search & Sort Controls -->
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <div class="relative flex-1">
+                            <span
+                                class="absolute left-3 top-2.5 text-slate-500 material-icons-round text-lg">search</span>
+                            <input v-model="searchQuery" type="text" placeholder="搜索节点 (名称/协议/地址)..."
+                                class="w-full bg-slate-800 border border-slate-700/50 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500/50 outline-none transition shadow-inner">
+                        </div>
+
+                        <div class="relative min-w-[160px]">
+                            <span
+                                class="absolute left-3 top-2.5 text-slate-500 material-icons-round text-lg">sort</span>
+                            <select v-model="sortMode"
+                                class="w-full bg-slate-800 border border-slate-700/50 rounded-xl pl-10 pr-8 py-2.5 text-sm text-slate-200 focus:ring-2 focus:ring-indigo-500/50 outline-none appearance-none transition shadow-inner cursor-pointer">
+                                <option value="latency">🚀 按延迟排序</option>
+                                <option value="purity">🛡️ 按纯净度排序</option>
+                            </select>
+                            <span
+                                class="absolute right-3 top-3 text-slate-500 material-icons-round text-sm pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-3 px-1 gap-2">
+                        <div class="flex items-center space-x-3">
+                            <h3 class="text-slate-400 text-sm font-medium">节点列表 ({{ filteredProxies.length }})</h3>
+
+                            <!-- Selection Toolbar -->
+                            <div class="flex items-center bg-slate-800 rounded-lg p-1 border border-slate-700/50">
+                                <button @click="toggleSelectPage"
+                                    class="px-2 py-1 text-xs rounded hover:bg-slate-700 transition flex items-center"
+                                    :class="pageSelected ? 'text-indigo-400 font-bold' : 'text-slate-400'">
+                                    <span class="material-icons-round text-sm mr-1">{{ pageSelected ? 'check_box' :
+                                        'check_box_outline_blank' }}</span>
+                                    全选本页
+                                </button>
+                                <div class="w-px h-3 bg-slate-700 mx-1"></div>
+                                <button @click="clearSelection" v-if="selectedCount > 0"
+                                    class="px-2 py-1 text-xs rounded hover:bg-red-500/20 text-red-400 transition flex items-center">
+                                    清除 ({{ selectedCount }})
+                                </button>
+                            </div>
+                            <!-- Hide Failed Toggle -->
+                            <button @click="hideFailed = !hideFailed"
+                                class="px-2 py-1 text-xs rounded hover:bg-slate-700 transition flex items-center border border-transparent"
+                                :class="hideFailed ? 'text-indigo-400 bg-slate-800 border-indigo-500/30' : 'text-slate-500'">
+                                <span class="material-icons-round text-sm mr-1">{{ hideFailed ? 'visibility_off' :
+                                    'visibility' }}</span>
+                                {{ hideFailed ? '隐藏超时' : '含超时' }}
+                            </button>
+                            <!-- Manual Only Toggle -->
+                            <button @click="showManualOnly = !showManualOnly"
+                                class="px-2 py-1 text-xs rounded hover:bg-slate-700 transition flex items-center border border-transparent"
+                                :class="showManualOnly ? 'text-amber-400 bg-slate-800 border-amber-500/30' : 'text-slate-500'">
+                                <span class="material-icons-round text-sm mr-1">{{ showManualOnly ? 'bookmark' :
+                                    'bookmark_border' }}</span>
+                                手动添加
+                                <span v-if="manualProxies.length > 0"
+                                    class="ml-1 bg-amber-500/20 text-amber-400 px-1 rounded text-[10px]">{{
+                                    manualProxies.length }}</span>
+                            </button>
+                            <!-- Forum (Linux.do) Only Toggle -->
+                            <button @click="showForumOnly = !showForumOnly"
+                                class="px-2 py-1 text-xs rounded hover:bg-slate-700 transition flex items-center border border-transparent"
+                                :class="showForumOnly ? 'text-purple-400 bg-slate-800 border-purple-500/30' : 'text-slate-500'">
+                                <span class="material-icons-round text-sm mr-1">{{ showForumOnly ? 'forum' :
+                                    'chat_bubble_outline' }}</span>
+                                论坛
+                                <span v-if="forumProxiesCount > 0"
+                                    class="ml-1 bg-purple-500/20 text-purple-400 px-1 rounded text-[10px]">{{
+                                    forumProxiesCount }}</span>
+                            </button>
+
+
+                            <!-- Global Purity Check Button -->
+                            <div class="w-px h-3 bg-slate-700 mx-1"></div>
+                            <button @click="handleGlobalPurityCheck" :disabled="purityChecking"
+                                class="px-2 py-1 text-xs rounded hover:bg-teal-500/20 transition flex items-center border border-transparent"
+                                :class="purityChecking ? 'text-slate-500 cursor-not-allowed' : 'text-teal-400 hover:border-teal-500/30'">
+                                <span class="material-icons-round text-sm mr-1"
+                                    :class="{'animate-spin': purityChecking}">
+                                    {{ purityChecking ? 'sync' : 'verified_user' }}
+                                </span>
+                                {{ purityChecking ? '检测中...' : '检测纯净度' }}
+                            </button>
+                        </div>
+
+                        <div v-if="autoCheckCount > 0" class="text-xs text-indigo-400 animate-pulse flex items-center">
+                            <span class="material-icons-round text-sm mr-1 animate-spin">sync</span>
+                            自动检测中: 剩余 {{ autoCheckCount }} 个
+                        </div>
+                    </div>
+
+                    <transition-group name="list" tag="div"
+                        class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[calc(100vh-280px)] overflow-y-auto custom-scrollbar pr-2 content-start">
+                        <div v-for="node in filteredProxies" :key="node.id"
+                            class="glass-panel p-4 rounded-xl hover:bg-slate-800/80 transition group relative overflow-hidden border-l-4"
+                            :class="getProtocolColor(node.type)">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center space-x-2 overflow-hidden">
+                                    <!-- Checkbox -->
+                                    <div @click.stop="toggleSelection(node.id)"
+                                        class="cursor-pointer text-slate-500 hover:text-indigo-400 transition mr-1">
+                                        <span class="material-icons-round text-lg">{{ selectedIds.has(node.id) ?
+                                            'check_box' : 'check_box_outline_blank' }}</span>
+                                    </div>
+
+                                    <span class="text-xs font-bold px-1.5 py-0.5 rounded text-slate-900 uppercase"
+                                        :class="getProtocolBadgeColor(node.type)">
+                                        {{ node.type }}
+                                    </span>
+                                    <!-- 手动添加标记 -->
+                                    <span v-if="node.isManual"
+                                        class="text-[10px] px-1 py-0.5 rounded bg-amber-500/20 text-amber-400 font-medium">手动</span>
+                                    <!-- 论坛导入标记 -->
+                                    <span v-if="node.isFromForum"
+                                        class="text-[10px] px-1 py-0.5 rounded bg-purple-500/20 text-purple-400 font-medium flex items-center">
+                                        <span class="material-icons-round text-[10px] mr-0.5">forum</span>
+                                        {{ node.forumSource || '论坛' }}
+                                    </span>
+
+                                    <h4 class="font-medium text-slate-200 truncate" :title="node.name">{{ node.name }}
+                                    </h4>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <button @click="checkNodePurity(node)"
+                                        class="text-slate-500 hover:text-blue-400 p-1 transition" title="检测纯净度"
+                                        :disabled="node.checking">
+                                        <span class="material-icons-round text-sm"
+                                            :class="{'animate-spin': node.checking}">shield</span>
+                                    </button>
+                                    <button @click="node.isManual ? deleteManualProxy(node) : deleteProxy(node.id)"
+                                        class="text-slate-600 hover:text-red-400 p-1 transition" title="删除">
+                                        <span class="material-icons-round text-sm">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 text-xs text-slate-400 mb-3">
+                                <div class="truncate" title="地址">{{ node.server }}:{{ node.port }}</div>
+                                <div class="truncate" title="延迟">
+                                    <!-- Local Latency (Priority) -->
+                                    <span v-if="typeof node.localLatency !== 'undefined'" :class="{
+                                        'text-red-500 font-bold': node.localLatency === -1,
+                                        'text-emerald-400': node.localLatency >= 0 && node.localLatency < 200,
+                                        'text-yellow-400': node.localLatency >= 200 && node.localLatency < 500,
+                                        'text-orange-400': node.localLatency >= 500
+                                    }">
+                                        <span class="material-icons-round text-[10px] align-middle mr-1">{{
+                                            node.localLatency === -1 ? 'error' : 'network_check' }}</span>
+                                        {{ node.localLatency === -1 ? '超时' : node.localLatency + ' ms (本地)' }}
+                                    </span>
+                                    <!-- Imported Latency (Fallback) -->
+                                    <span v-else-if="node.latency" :class="{
+                                        'text-emerald-400': node.latency < 100,
+                                        'text-yellow-400': node.latency >= 100 && node.latency < 200,
+                                        'text-orange-400': node.latency >= 200
+                                    }">
+                                        <span class="material-icons-round text-[10px] align-middle mr-1">speed</span>
+                                        {{ node.latency }} ms
+                                    </span>
+                                </div>
+                                <div class="truncate col-span-2 opacity-50 font-mono" title="加密/协议 ID">
+                                    {{ node.uuid || node.password || 'Data ' + node.id }}
+                                </div>
+                            </div>
+
+                            <!-- Purity/Risk Info -->
+                            <div v-if="node.failedCheck"
+                                class="mt-2 pt-2 border-t border-slate-700/50 text-xs flex items-center justify-between text-red-400 animate-fade-in">
+                                <span class="flex items-center">
+                                    <span class="material-icons-round text-sm mr-1">error</span>
+                                    纯净度检测失败
+                                </span>
+                            </div>
+
+                            <div v-if="node.purity"
+                                class="mt-2 pt-2 border-t border-slate-700/50 text-xs flex items-center justify-between animate-fade-in">
+                                <div class="flex items-center text-slate-300">
+                                    <span class="mr-2 font-bold">{{ node.purity.countryCode }}</span>
+                                    <span class="truncate max-w-[80px]" :title="node.purity.isp">{{ node.purity.isp
+                                        }}</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-1.5 py-0.5 rounded font-bold transition-colors" :class="{
+                                            'bg-emerald-500/20 text-emerald-400': node.purityScore >= 80,
+                                            'bg-yellow-500/20 text-yellow-400': node.purityScore >= 60 && node.purityScore < 80,
+                                            'bg-red-500/20 text-red-400': node.purityScore < 60
+                                        }">
+                                        {{ (node.purityScore !== undefined ? node.purityScore : (node.purity.hosting ?
+                                        50 : 90)) }}分
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </transition-group>
+
+                    <!-- Pagination Controls -->
+                    <div v-if="totalPages > 1" class="flex justify-center items-center space-x-4 mt-6 animate-fade-in">
+                        <button @click="prevPage" :disabled="currentPage === 1"
+                            class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm flex items-center">
+                            <span class="material-icons-round mr-1 text-base">chevron_left</span>
+                            上一页
+                        </button>
+
+                        <span class="text-slate-400 text-sm font-mono">
+                            {{ currentPage }} / {{ totalPages }}
+                        </span>
+
+                        <!-- Page Size Selector -->
+                        <div class="relative">
+                            <select v-model="pageSize" @change="currentPage = 1"
+                                class="bg-slate-800 border-none text-slate-400 text-xs rounded px-2 py-1 outline-none cursor-pointer hover:bg-slate-700 transition appearance-none pr-6">
+                                <option :value="50">50 条/页</option>
+                                <option :value="100">100 条/页</option>
+                                <option :value="200">200 条/页</option>
+                                <option :value="500">500 条/页</option>
+                            </select>
+                            <span
+                                class="absolute right-1 top-1.5 text-slate-500 material-icons-round text-xs pointer-events-none">expand_more</span>
+                        </div>
+
+                        <button @click="nextPage" :disabled="currentPage === totalPages"
+                            class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition text-sm flex items-center">
+                            下一页
+                            <span class="material-icons-round ml-1 text-base">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-12 border-t border-slate-800 pt-6 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 Antigravity. All rights reserved.</p>
+        </footer>
+
+        <!-- Export Modal -->
+        <div v-if="showExportModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showExportModal = false"></div>
+            <div class="glass-panel w-full max-w-md rounded-2xl p-6 relative z-10 animate-fade-in-up">
+                <h3 class="text-xl font-bold text-white mb-2">导出配置</h3>
+                <p class="text-sm text-slate-400 mb-4">
+                    {{ selectedCount > 0 ? `将导出已选中的 ${selectedCount} 个节点` : `将导出当前列表所有 ${proxies.length} 个节点` }}
+                </p>
+                <div class="space-y-3">
+                    <button @click="exportConfig('clash')"
+                        class="w-full p-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/50 flex items-center justify-between group transition">
+                        <div class="flex items-center">
+                            <span class="material-icons-round text-blue-400 mr-3 text-3xl">api</span>
+                            <div class="text-left">
+                                <div class="text-white font-medium">Clash 配置 (YAML)</div>
+                                <div class="text-xs text-slate-400">标准 Clash 客户端格式</div>
+                            </div>
+                        </div>
+                        <span class="material-icons-round text-slate-500 group-hover:text-white">arrow_forward</span>
+                    </button>
+
+                    <button @click="exportConfig('singbox')"
+                        class="w-full p-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/50 flex items-center justify-between group transition">
+                        <div class="flex items-center">
+                            <span class="material-icons-round text-pink-400 mr-3 text-3xl">dns</span>
+                            <div class="text-left">
+                                <div class="text-white font-medium">Sing-box 配置 (JSON)</div>
+                                <div class="text-xs text-slate-400">现代代理平台格式</div>
+                            </div>
+                        </div>
+                        <span class="material-icons-round text-slate-500 group-hover:text-white">arrow_forward</span>
+                    </button>
+
+                    <button @click="exportConfig('base64')"
+                        class="w-full p-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/50 flex items-center justify-between group transition">
+                        <div class="flex items-center">
+                            <span class="material-icons-round text-emerald-400 mr-3 text-3xl">code</span>
+                            <div class="text-left">
+                                <div class="text-white font-medium">Base64 订阅链接</div>
+                                <div class="text-xs text-slate-400">通用订阅格式</div>
+                            </div>
+                        </div>
+                        <span class="material-icons-round text-slate-500 group-hover:text-white">arrow_forward</span>
+                    </button>
+                </div>
+                <button @click="showExportModal = false"
+                    class="mt-6 w-full py-2 text-slate-400 hover:text-white text-sm">取消</button>
+            </div>
+        </div>
+
+        <!-- Log Terminal Modal -->
+        <div v-show="showLogModal" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity pointer-events-auto"
+                @click="!cloudLoading && (showLogModal = false)"></div>
+
+            <!-- Draggable Window -->
+            <div ref="logWindowEl" :style="modalStyle"
+                class="absolute bg-slate-900/90 backdrop-blur-xl w-full max-w-3xl h-[65vh] rounded-xl shadow-2xl z-50 flex flex-col border border-slate-600/50 animate-fade-in-up overflow-hidden pointer-events-auto">
+                <!-- Mac-style Header with Drag Handle -->
+                <div @mousedown="startDrag"
+                    class="bg-white/5 px-4 py-3 flex items-center justify-between border-b border-white/10 cursor-grab active:cursor-grabbing select-none">
+                    <div class="flex items-center space-x-2">
+                        <div @click.stop="!cloudLoading && (showLogModal = false)"
+                            class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 cursor-pointer flex items-center justify-center group">
+                            <span
+                                class="material-icons-round text-[8px] text-black opacity-0 group-hover:opacity-100">close</span>
+                        </div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="text-xs font-mono text-slate-400">antigravity-crawler — -zsh — 80x24</div>
+                    <div class="hover:bg-white/10 rounded px-2 py-0.5 cursor-pointer transition-colors"
+                        @click="showLogModal = false">
+                        <span class="text-[10px] text-slate-400 font-medium">隐藏</span>
+                    </div>
+                </div>
+
+                <!-- Terminal Content -->
+                <div ref="logWindowRef"
+                    class="flex-1 p-4 overflow-y-auto font-mono text-xs space-y-1 custom-scrollbar text-slate-300">
+                    <div v-if="serverLogs.length === 0" class="text-slate-500 italic">Waiting for logs...</div>
+                    <div v-for="(log, idx) in serverLogs" :key="idx" class="break-words">
+                        <span class="text-slate-600 mr-2">[{{ log.timestamp }}]</span>
+                        <span :class="{
+                            'text-emerald-400': log.type === 'success',
+                            'text-red-400': log.type === 'error',
+                            'text-blue-400': log.type === 'info', 
+                            'text-yellow-400': log.type === 'warning',
+                            'text-slate-300': !log.type || log.type === 'normal'
+                        }">{{ log.msg }}</span>
+                    </div>
+                    <div v-if="cloudLoading" class="animate-pulse text-indigo-400 mt-2">▋</div>
+                </div>
+
+                <!-- Footer Stats -->
+                <div
+                    class="bg-black/40 px-4 py-2 text-xs text-slate-500 border-t border-white/10 flex justify-between items-center font-mono">
+                    <div class="flex space-x-4">
+                        <span class="text-slate-500">Task Scanned: <span class="text-white">{{ serverStats.total
+                                }}</span></span>
+                        <span v-if="serverStats.active > 0" class="text-emerald-500">Valid: {{ serverStats.active
+                            }}</span>
+                    </div>
+
+                    <span v-if="cloudLoading" class="flex items-center text-blue-400">
+                        <span class="material-icons-round text-xs animate-spin mr-1">sync</span>
+                        Running...
+                    </span>
+                    <span v-else class="text-emerald-400">Done</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear Confirmation Modal -->
+        <div v-if="showClearModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+            <div
+                class="glass-panel w-full max-w-sm rounded-2xl p-6 relative z-10 animate-fade-in-up border border-red-500/30">
+                <div class="flex items-center mb-4 text-red-400">
+                    <span class="material-icons-round text-3xl mr-2">warning</span>
+                    <h3 class="text-xl font-bold text-white">确认清空？</h3>
+                </div>
+                <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                    您即将清空所有 <span class="font-bold text-white">{{ proxies.length }}</span> 个节点。<br>
+                    此操作<span class="text-red-400 font-bold">无法撤销</span>，您确定要继续吗？
+                </p>
+                <div class="space-y-3">
+                    <button @click="confirmClear"
+                        class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold shadow-lg shadow-red-600/20 transition active:scale-95">
+                        确认清空
+                    </button>
+                    <button @click="showClearModal = false"
+                        class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-sm">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <transition name="fade">
+            <div v-if="toastMsg" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+                <div
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-full shadow-lg shadow-indigo-500/30 font-medium flex items-center text-sm">
+                    <span class="material-icons-round mr-2 text-base">check_circle</span>
+                    {{ toastMsg }}
+                </div>
+            </div>
+        </transition>
+    </div>
+
+
+    <!-- Logic -->
+    <script>
+        const { createApp, ref, computed, onMounted, watch } = Vue;
+
+        createApp({
+            setup() {
+                const inputUrl = ref('');
+                const rawContent = ref('');
+                const proxies = ref([]);
+                const loading = ref(false);
+                const errorMsg = ref('');
+                const searchQuery = ref('');
+                const filterType = ref('all'); // all, vmess, ss, etc
+                const filterCountry = ref('all');
+                const sortMode = ref('latency'); // latency, purity, local
+                const hideFailed = ref(false);
+                const showManualOnly = ref(false); // 只显示手动添加的节点
+                const showForumOnly = ref(false); // 只显示论坛导入的节点
+                const manualProxies = ref([]);	// 手动添加的节点列表
+
+                const isLocalChecking = ref(false);
+                const localCheckProgress = ref('');
+                const linuxDoLoading = ref(false); // Linux.do 导入加载状态
+
+                const showImportParams = ref(false);
+                const showExportModal = ref(false);
+                const showClearModal = ref(false);
+                const showLogModal = ref(false); // Controls visibility of log window
+
+                const serverLogs = ref([]); // Stores logs from server
+                const logWindowRef = ref(null);
+                const logWindowEl = ref(null);
+
+                // --- Drag Logic ---
+                const modalStyle = ref({
+                    top: '15%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    margin: '0'
+                });
+
+                let isDragging = false;
+                let dragOffset = { x: 0, y: 0 };
+
+                const startDrag = (e) => {
+                    if (!logWindowEl.value) return;
+                    isDragging = true;
+                    const rect = logWindowEl.value.getBoundingClientRect();
+                    dragOffset.x = e.clientX - rect.left;
+                    dragOffset.y = e.clientY - rect.top;
+
+                    // Convert to absolute pixels to remove transform dependency during drag
+                    modalStyle.value = {
+                        top: `${rect.top}px`,
+                        left: `${rect.left}px`,
+                        width: `${rect.width}px`, // maintain width
+                        transform: 'none',
+                        margin: '0'
+                    };
+
+                    window.addEventListener('mousemove', onDrag);
+                    window.addEventListener('mouseup', stopDrag);
+                };
+
+                const onDrag = (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const x = e.clientX - dragOffset.x;
+                    const y = e.clientY - dragOffset.y;
+                    modalStyle.value = {
+                        ...modalStyle.value,
+                        top: `${y}px`,
+                        left: `${x}px`
+                    };
+                };
+
+                const stopDrag = () => {
+                    isDragging = false;
+                    window.removeEventListener('mousemove', onDrag);
+                    window.removeEventListener('mouseup', stopDrag);
+                };
+
+                // Auto-scroll logs
+                watch(serverLogs, () => {
+                    if (showLogModal.value && logWindowRef.value) {
+                        setTimeout(() => {
+                            logWindowRef.value.scrollTop = logWindowRef.value.scrollHeight;
+                        }, 50);
+                    }
+                }, { deep: true });
+
+
+
+
+                // Selection
+                const selectedIds = ref(new Set());
+
+                const toggleSelection = (id) => {
+                    const s = new Set(selectedIds.value);
+                    if (s.has(id)) s.delete(id);
+                    else s.add(id);
+                    selectedIds.value = s;
+                };
+
+                const clearSelection = () => selectedIds.value = new Set();
+
+                const selectedCount = computed(() => selectedIds.value.size);
+
+                // 纯净度检查状态
+                const purityChecking = ref(false);
+
+                // (Deleted old checkSelectedPurity implementation to avoid duplicate declaration)
+
+                const currentPage = ref(1);
+                const pageSize = ref(50); // Render 50 items per page
+
+                // Persistence - 从服务器加载数据
+                const loadProxies = async () => {
+                    try {
+                        // 从服务器加载云端抓取的节点
+                        const res = await fetch('/api/proxies');
+                        const cloudProxies = await res.json();
+
+                        // 从服务器加载手动添加的节点
+                        const manualRes = await fetch('/api/manual/proxies');
+                        const manualData = await manualRes.json();
+                        manualProxies.value = manualData;
+
+                        // 合并节点（去重）
+                        const allProxies = [...cloudProxies];
+                        const existingRaw = new Set(allProxies.map(p => p.raw));
+
+                        for (const mp of manualData) {
+                            if (!existingRaw.has(mp.raw)) {
+                                allProxies.push(mp);
+                            }
+                        }
+
+                        // 将后端的 purityInfo 映射到前端显示需要的 purity 字段
+                        allProxies.forEach(p => {
+                            if (p.purityInfo && !p.purity) {
+                                p.purity = {
+                                    countryCode: p.purityInfo.country || p.purityInfo.countryCode,
+                                    isp: p.purityInfo.isp || '',
+                                    hosting: p.purityInfo.hosting || false
+                                };
+                            }
+                        });
+
+                        proxies.value = allProxies;
+                        console.log(`Loaded ${cloudProxies.length} cloud + ${manualData.length} manual proxies from server`);
+                    } catch (e) {
+                        console.error('Failed to load proxies from server:', e);
+                    }
+                };
+
+                const saveProxies = () => {
+                    // 不再使用 localStorage，数据已保存在服务器
+                    console.log('Proxies synced to server');
+                };
+
+                // Watchers - 不再保存到 localStorage
+                watch(proxies, () => {
+                    // 数据变化由各个操作（手动添加、删除等）自行处理保存
+                    // 此处不做任何保存操作
+                }, { deep: true });
+
+                // Reset page on search or sort change
+                watch([searchQuery, sortMode, filterType, filterCountry], () => currentPage.value = 1);
+
+                // --- Computed ---
+                const getCountry = (node) => {
+                    if (node.purity && node.purity.countryCode) return node.purity.countryCode;
+                    // Heuristic: Check for _CN_, _US_, etc in name
+                    const match = node.name.match(/_([A-Z]{2})_/);
+                    if (match) return match[1];
+                    return 'Other';
+                };
+
+                // --- Dynamic Stats Logic ---
+
+                // 1. Base Context: Applies Search & HideFailed (Shared by all views)
+                // This represents the "User's current universe of interesting nodes"
+                const baseContextProxies = computed(() => {
+                    let res = proxies.value;
+
+                    // 手动添加过滤
+                    if (showManualOnly.value) {
+                        const manualIds = new Set(manualProxies.value.map(p => p.id));
+                        res = res.filter(p => p.isManual || manualIds.has(p.id));
+                    }
+
+                    // 论坛来源过滤
+                    if (showForumOnly.value) {
+                        res = res.filter(p => p.isFromForum === true);
+                    }
+
+
+
+                    if (searchQuery.value) {
+                        const q = searchQuery.value.toLowerCase();
+                        res = res.filter(p =>
+                            p.name.toLowerCase().includes(q) ||
+                            p.server.toLowerCase().includes(q) ||
+                            p.type.toLowerCase().includes(q)
+                        );
+                    }
+
+                    if (hideFailed.value) {
+                        res = res.filter(p => {
+                            if (p.localLatency === undefined) return true;
+                            return p.localLatency !== -1 && p.localLatency !== 99999;
+                        });
+                    }
+                    return res;
+                });
+
+                // 2. For Country Dropdown & Lists:
+                // Depends on Base + Protocol Selection (but IGNORES Country Selection)
+                const proxiesForCountryStats = computed(() => {
+                    if (filterType.value === 'all') return baseContextProxies.value;
+                    return baseContextProxies.value.filter(p => p.type === filterType.value);
+                });
+
+                // Used by Country Dropdown
+                const proxiesByType = proxiesForCountryStats;
+
+                // 3. For Protocol Tabs:
+                // Depends on Base + Country Selection (but IGNORES Protocol Selection)
+                const proxiesForProtocolStats = computed(() => {
+                    if (filterCountry.value === 'all') return baseContextProxies.value;
+                    return baseContextProxies.value.filter(p => getCountry(p) === filterCountry.value);
+                });
+
+                // 4. Total Visible Count (for "All Protocols" tab)
+                const totalVisibleCount = computed(() => proxiesForProtocolStats.value.length);
+
+                const countries = computed(() => {
+                    const s = new Set(proxiesByType.value.map(p => getCountry(p)));
+                    return [...s].filter(c => c !== 'Other').sort();
+                });
+
+                const countryStats = computed(() => {
+                    const stats = {};
+                    proxiesByType.value.forEach(p => {
+                        const c = getCountry(p);
+                        stats[c] = (stats[c] || 0) + 1;
+                    });
+                    return stats;
+                });
+
+                const protocols = computed(() => {
+                    return [...new Set(proxies.value.map(p => p.type))];
+                });
+
+                // 论坛导入节点计数
+                const forumProxiesCount = computed(() => {
+                    return proxies.value.filter(p => p.isFromForum === true).length;
+                });
+
+
+
+                const protocolStats = computed(() => {
+                    const stats = {};
+                    // Init with 0
+                    protocols.value.forEach(p => stats[p] = 0);
+                    // Count based on filtered context
+                    proxiesForProtocolStats.value.forEach(p => {
+                        stats[p.type] = (stats[p.type] || 0) + 1;
+                    });
+                    return stats;
+                });
+
+                const allFilteredProxies = computed(() => {
+                    // Start from Base Context
+                    let res = baseContextProxies.value;
+
+                    // Apply Protocol Filter
+                    if (filterType.value !== 'all') {
+                        res = res.filter(p => p.type === filterType.value);
+                    }
+
+                    // Apply Country Filter
+                    if (filterCountry.value !== 'all') {
+                        res = res.filter(p => getCountry(p) === filterCountry.value);
+                    }
+
+
+                    // hideFailed is already applied in baseContextProxies
+
+
+                    // Sorting
+                    return res.sort((a, b) => {
+                        const latA = (typeof a.latency === 'number') ? a.latency : 99999;
+                        const latB = (typeof b.latency === 'number') ? b.latency : 99999;
+
+                        if (sortMode.value === 'purity') {
+                            const scoreA = (typeof a.purityScore === 'number') ? a.purityScore : -1;
+                            const scoreB = (typeof b.purityScore === 'number') ? b.purityScore : -1;
+
+                            if (scoreA !== scoreB) {
+                                return scoreB - scoreA; // High score first
+                            }
+                            // Fallback to latency
+                            return latA - latB;
+                        }
+
+                        // Sort by Local Latency (New)
+                        if (sortMode.value === 'local') {
+                            // Fix: Treat -1 (timeout) as Infinity (bottom), and undefined as Infinity
+                            const getVal = (v) => (typeof v === 'number' && v >= 0) ? v : 999999;
+                            return getVal(a.localLatency) - getVal(b.localLatency);
+                        }
+
+                        // Default: Latency
+                        return latA - latB;
+                    });
+                });
+
+                const totalPages = computed(() => Math.ceil(allFilteredProxies.value.length / pageSize.value));
+
+                const filteredProxies = computed(() => {
+                    const start = (currentPage.value - 1) * pageSize.value;
+                    const end = start + pageSize.value;
+                    return allFilteredProxies.value.slice(start, end);
+                });
+
+                const pageSelected = computed(() => {
+                    if (filteredProxies.value.length === 0) return false;
+                    return filteredProxies.value.every(p => selectedIds.value.has(p.id));
+                });
+
+                const toggleSelectPage = () => {
+                    const s = new Set(selectedIds.value);
+                    const allInPage = filteredProxies.value.every(p => s.has(p.id));
+
+                    if (allInPage) {
+                        filteredProxies.value.forEach(p => s.delete(p.id));
+                    } else {
+                        filteredProxies.value.forEach(p => s.add(p.id));
+                    }
+                    selectedIds.value = s;
+                };
+
+                const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++; };
+                const prevPage = () => { if (currentPage.value > 1) currentPage.value--; };
+
+                const getProtocolColor = (type) => {
+                    switch (type) {
+                        case 'vmess': return 'border-indigo-500';
+                        case 'vless': return 'border-blue-500';
+                        case 'ss': return 'border-emerald-500';
+                        case 'trojan': return 'border-pink-500';
+                        case 'hysteria2': return 'border-amber-500';
+                        default: return 'border-slate-500';
+                    }
+                };
+                const getProtocolBadgeColor = (type) => {
+                    switch (type) {
+                        case 'vmess': return 'bg-indigo-400';
+                        case 'vless': return 'bg-blue-400';
+                        case 'ss': return 'bg-emerald-400';
+                        case 'trojan': return 'bg-pink-400';
+                        case 'hysteria2': return 'bg-amber-400';
+                        default: return 'bg-slate-400';
+                    }
+                };
+
+                // --- Parsing Logic ---
+                const decodeBase64 = (str) => {
+                    try {
+                        return decodeURIComponent(escape(atob(str.replace(/-/g, "+").replace(/_/g, "/"))));
+                    } catch (e) {
+                        return atob(str);
+                    }
+                };
+
+                // Helper to parse query string from vmess/vless/trojan raw links if needed
+                // But mostly standard is: protocol://uuid@host:port?params#name
+                const parseStandardLink = (link, type) => {
+                    try {
+                        const url = new URL(link);
+                        const params = Object.fromEntries(url.searchParams);
+                        // Determine TLS status
+                        let isTls = false;
+                        if (type === 'trojan' || type === 'hysteria2') isTls = true;
+                        if (params.security === 'tls' || params.security === 'reality' || params.type === 'grpc') isTls = true;
+                        if (type === 'ss') isTls = false; // SS usually no TLS unless plugin
+
+                        const network = params.type || 'tcp';
+
+                        const proxy = {
+                            id: Math.random().toString(36).substr(2, 9),
+                            name: decodeURIComponent(url.hash.slice(1)) || type + ' Node',
+                            type: type,
+                            server: url.hostname,
+                            port: parseInt(url.port, 10) || 443,
+                            uuid: type === 'vless' ? url.username : undefined,
+                            password: type === 'trojan' || type === 'hysteria2' ? url.username : undefined,
+                            raw: link,
+                            tls: isTls,
+                            'skip-cert-verify': true,
+                            network: network,
+                            servername: params.sni || params.host,
+                            flow: params.flow
+                        };
+
+                        // Reality 配置
+                        if (params.security === 'reality') {
+                            proxy['reality-opts'] = {
+                                'public-key': params.pbk,
+                                'short-id': params.sid
+                            };
+                            proxy['client-fingerprint'] = params.fp || 'chrome';
+                        }
+
+                        // WebSocket 传输配置
+                        if (network === 'ws') {
+                            proxy['ws-opts'] = {
+                                path: params.path || '/',
+                                headers: params.host ? { Host: params.host } : undefined
+                            };
+                        }
+
+                        // gRPC 传输配置
+                        if (network === 'grpc') {
+                            proxy['grpc-opts'] = {
+                                'grpc-service-name': params.serviceName || params.service || 'grpc'
+                            };
+                        }
+
+                        // HTTP/2 传输配置
+                        if (network === 'h2') {
+                            proxy['h2-opts'] = {
+                                host: params.host ? [params.host] : undefined,
+                                path: params.path || '/'
+                            };
+                        }
+
+                        return proxy;
+                    } catch (e) { return null; }
+                };
+
+                const parseVmess = (link) => {
+                    // Try VMess JSON format (vmess://base64-json)
+                    if (!link.includes('@')) {
+                        try {
+                            const b64 = link.replace('vmess://', '');
+                            const json = JSON.parse(decodeBase64(b64));
+                            const proxy = {
+                                id: Math.random().toString(36).substr(2, 9),
+                                name: json.ps || 'VMess Node',
+                                type: 'vmess',
+                                server: json.add,
+                                port: parseInt(json.port, 10) || 443,
+                                raw: link,
+                                uuid: json.id,
+                                alterId: parseInt(json.aid, 10) || 0,
+                                cipher: json.scy || 'auto',
+                                network: json.net || 'tcp',
+                                tls: json.tls === 'tls',
+                                'skip-cert-verify': true,
+                                servername: json.sni || json.host
+                            };
+
+                            // 添加 WebSocket 传输配置
+                            if (json.net === 'ws') {
+                                proxy['ws-opts'] = {
+                                    path: json.path || '/',
+                                    headers: json.host ? { Host: json.host } : undefined
+                                };
+                            }
+
+                            // 添加 gRPC 传输配置
+                            if (json.net === 'grpc') {
+                                proxy['grpc-opts'] = {
+                                    'grpc-service-name': json.path || 'grpc'
+                                };
+                            }
+
+                            // 添加 HTTP/2 传输配置
+                            if (json.net === 'h2') {
+                                proxy['h2-opts'] = {
+                                    host: json.host ? [json.host] : undefined,
+                                    path: json.path || '/'
+                                };
+                            }
+
+                            return proxy;
+                        } catch (e) { return null; }
+                    }
+                    // Fallback to standard link parsing if vmess used that way (rare but possible)
+                    return parseStandardLink(link, 'vmess');
+                };
+
+                const parseContent = async () => {
+                    loading.value = true;
+                    errorMsg.value = '';
+                    let content = rawContent.value;
+
+                    // Fetch if URL provided
+                    if (inputUrl.value && !content) {
+                        try {
+                            const target = inputUrl.value;
+                            // Use our own proxy to bypass CORS
+                            const proxyUrl = `/api/proxy?url=${encodeURIComponent(target)}`;
+                            const res = await fetch(proxyUrl);
+                            if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+                            content = await res.text();
+
+                            // Try to detect if it's base64 encoded response (common for subscription links)
+                            if (!content.includes('://') && /^[A-Za-z0-9+/=\-_]+$/.test(content.trim())) {
+                                content = decodeBase64(content.trim());
+                            }
+                        } catch (e) {
+                            errorMsg.value = `Error: ${e.message}`;
+                            loading.value = false;
+                            return;
+                        }
+                    }
+
+                    if (!content) {
+                        errorMsg.value = 'Please provide URL or Content.';
+                        loading.value = false;
+                        return;
+                    }
+
+                    // Attempt Base64 decode again if the whole content looks like one big base64 blob
+                    const trimmed = content.trim();
+                    if (!trimmed.includes('://') && !trimmed.includes('proxies:') && /^[A-Za-z0-9+/=\-_]+$/.test(trimmed)) {
+                        try {
+                            content = decodeBase64(trimmed);
+                        } catch (e) { }
+                    }
+
+                    const newProxies = [];
+
+                    // 检查是否为 Clash YAML 格式 (包含 proxies:)
+                    if (content.includes('proxies:')) {
+                        try {
+                            // 简单的 YAML 解析：提取 proxies 数组中的 JSON 对象
+                            const lines = content.split('\n');
+                            let inProxies = false;
+
+                            for (const line of lines) {
+                                const trimLine = line.trim();
+
+                                if (trimLine === 'proxies:') {
+                                    inProxies = true;
+                                    continue;
+                                }
+
+                                // 如果遇到其他顶级键，停止解析
+                                if (inProxies && /^[a-z\-]+:/.test(trimLine) && !trimLine.startsWith('-')) {
+                                    inProxies = false;
+                                }
+
+                                if (inProxies && trimLine.startsWith('- {')) {
+                                    // 提取 JSON 对象
+                                    try {
+                                        const jsonStr = trimLine.substring(2); // 去掉 "- "
+                                        const proxy = JSON.parse(jsonStr);
+                                        if (proxy && proxy.server && proxy.type) {
+                                            proxy.id = Math.random().toString(36).substr(2, 9);
+                                            proxy.raw = jsonStr;
+                                            newProxies.push(proxy);
+                                        }
+                                    } catch (e) { /* 忽略解析失败的行 */ }
+                                } else if (inProxies && trimLine.startsWith('-') && trimLine.includes('name:')) {
+                                    // 标准 YAML 格式（多行）
+                                    // 暂不支持，这种格式较复杂
+                                }
+                            }
+
+                            if (newProxies.length > 0) {
+                                console.log(`Parsed ${newProxies.length} proxies from Clash YAML`);
+                            }
+                        } catch (e) {
+                            console.error('YAML parsing error:', e);
+                        }
+                    }
+
+                    // 如果 YAML 解析没有结果，尝试逐行解析链接格式
+                    if (newProxies.length === 0) {
+                        const lines = content.split(/[\r\n]+/);
+
+                        for (const line of lines) {
+                            const tLine = line.trim();
+                            if (!tLine) continue;
+
+                            let p = null;
+                            if (tLine.startsWith('vmess://')) p = parseVmess(tLine);
+                            else if (tLine.startsWith('vless://')) p = parseStandardLink(tLine, 'vless');
+                            else if (tLine.startsWith('trojan://')) p = parseStandardLink(tLine, 'trojan');
+                            else if (tLine.startsWith('ss://')) {
+                                // Basic SS parsing (not exhaustive)
+                                try {
+                                    const url = new URL(tLine);
+                                    let tag = url.hash.slice(1);
+                                    if (tag) tag = decodeURIComponent(tag);
+                                    p = {
+                                        id: Math.random().toString(36).substr(2, 9),
+                                        name: tag || 'SS Node',
+                                        type: 'ss',
+                                        server: url.hostname,
+                                        port: url.port,
+                                        raw: tLine
+                                    };
+                                } catch (e) {
+                                    // Try legacy base64 format ss://BASE64#TAG
+                                    if (tLine.includes('#')) {
+                                        p = {
+                                            id: Math.random().toString(36).substr(2, 9),
+                                            name: decodeURIComponent(tLine.split('#')[1]),
+                                            type: 'ss',
+                                            server: 'Legacy',
+                                            port: 0,
+                                            raw: tLine,
+                                            tls: false
+                                        };
+                                    }
+                                }
+                            } else if (tLine.startsWith('hysteria2://') || tLine.startsWith('hy2://')) {
+                                p = parseStandardLink(tLine.replace('hysteria2://', 'https://').replace('hy2://', 'https://'), 'hysteria2'); // cheat URL parser
+                                if (p) { p.type = 'hysteria2'; p.raw = tLine; }
+                            }
+
+                            if (p) newProxies.push(p);
+                        }
+                    } // End of link parsing if block
+
+                    if (newProxies.length === 0) {
+                        errorMsg.value = 'No parsable nodes found.';
+                    } else {
+                        // 标记为手动添加
+                        newProxies.forEach(p => {
+                            p.isManual = true;
+                        });
+
+                        // Deduplicate based on raw link
+                        const existing = new Set(proxies.value.map(x => x.raw));
+                        const added = newProxies.filter(x => !existing.has(x.raw));
+
+                        if (added.length > 0) {
+                            // 保存到服务器的手动节点文件
+                            try {
+                                await fetch('/api/manual/proxies', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ proxies: added })
+                                });
+                                // 重新加载所有节点（包括新添加的）以确保界面同步
+                                await loadProxies();
+                            } catch (e) {
+                                console.error('保存手动节点失败:', e);
+                                // 即使保存失败，也先更新本地显示
+                                proxies.value = [...proxies.value, ...added];
+                            }
+
+                            showToast(`导入 ${added.length} 个节点成功 (已保存为手动节点)`);
+                            rawContent.value = '';
+                            inputUrl.value = '';
+                        } else {
+                            showToast('所有节点已存在');
+                        }
+                    }
+                    loading.value = false;
+                };
+
+                // 加载手动节点列表
+                const loadManualProxies = async () => {
+                    try {
+                        const res = await fetch('/api/manual/proxies');
+                        const data = await res.json();
+                        manualProxies.value = data;
+                    } catch (e) {
+                        console.error('加载手动节点失败:', e);
+                    }
+                };
+
+                // 删除手动节点
+                const deleteManualProxy = async (proxy) => {
+                    if (!proxy.id) return;
+
+                    try {
+                        await fetch('/api/manual/proxies', {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ ids: [proxy.id] })
+                        });
+
+                        // 从本地列表中移除
+                        proxies.value = proxies.value.filter(p => p.id !== proxy.id);
+                        manualProxies.value = manualProxies.value.filter(p => p.id !== proxy.id);
+
+                        showToast('节点已删除');
+                    } catch (e) {
+                        console.error('删除手动节点失败:', e);
+                        showToast('删除失败');
+                    }
+                };
+
+                // 从 Linux.do 导入节点
+                const importFromLinuxDo = async () => {
+                    if (linuxDoLoading.value) return;
+                    linuxDoLoading.value = true;
+                    showLogModal.value = true;
+                    serverLogs.value = []; // 清空之前的日志
+                    showToast('开始从 Linux.do 抓取节点...');
+
+                    // 启动日志轮询（实时显示进度）
+                    const logPoller = setInterval(async () => {
+                        try {
+                            const statusRes = await fetch('/api/status');
+                            const state = await statusRes.json();
+                            if (state.logs && Array.isArray(state.logs)) {
+                                serverLogs.value = state.logs;
+                            }
+                            serverStats.value = {
+                                total: state.total || 0,
+                                active: state.active || 0
+                            };
+                        } catch (e) {
+                            // 忽略轮询错误
+                        }
+                    }, 500); // 每500ms更新一次
+
+                    try {
+                        const res = await fetch('/api/import_linuxdo', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+
+                        // 停止轮询
+                        clearInterval(logPoller);
+
+                        // 最后获取一次日志
+                        try {
+                            const finalStatus = await fetch('/api/status');
+                            const finalState = await finalStatus.json();
+                            if (finalState.logs && Array.isArray(finalState.logs)) {
+                                serverLogs.value = finalState.logs;
+                            }
+                        } catch (e) { }
+
+                        const data = await res.json();
+
+                        if (data.success) {
+                            let importedCount = 0;
+
+                            // 直接使用后端解析的节点（已带有论坛标记）
+                            if (data.parsedProxies && data.parsedProxies.length > 0) {
+                                // 去重并合并
+                                const existing = new Set(proxies.value.map(x => x.raw));
+                                const newProxies = data.parsedProxies.filter(x => !existing.has(x.raw));
+
+                                if (newProxies.length > 0) {
+                                    // 保存到服务器的手动节点文件（带论坛标记）
+                                    try {
+                                        await fetch('/api/manual/proxies', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ proxies: newProxies })
+                                        });
+                                    } catch (e) {
+                                        console.error('保存论坛节点失败:', e);
+                                    }
+
+                                    proxies.value = [...proxies.value, ...newProxies];
+                                    importedCount = newProxies.length;
+                                }
+                            }
+
+                            // 处理订阅链接（逐个解析，也标记为论坛来源）
+                            if (data.subscriptions && data.subscriptions.length > 0) {
+                                showToast(`发现 ${data.subscriptions.length} 个订阅链接，开始解析...`);
+
+                                for (const subUrl of data.subscriptions.slice(0, 10)) { // 最多处理10个订阅
+                                    try {
+                                        // 使用代理获取订阅内容
+                                        const proxyUrl = `/api/proxy?url=${encodeURIComponent(subUrl)}`;
+                                        const subRes = await fetch(proxyUrl);
+                                        if (!subRes.ok) continue;
+
+                                        let content = await subRes.text();
+
+                                        // 尝试 Base64 解码
+                                        if (!content.includes('://') && /^[A-Za-z0-9+/=\-_]+$/.test(content.trim())) {
+                                            try {
+                                                content = decodeURIComponent(escape(atob(content.trim().replace(/-/g, "+").replace(/_/g, "/"))));
+                                            } catch (e) { }
+                                        }
+
+                                        // 简单解析节点链接
+                                        const lines = content.split(/[\r\n]+/);
+                                        const subProxies = [];
+
+                                        for (const line of lines) {
+                                            const tLine = line.trim();
+                                            if (!tLine) continue;
+
+                                            let p = null;
+                                            if (tLine.startsWith('vmess://')) p = parseVmess(tLine);
+                                            else if (tLine.startsWith('vless://')) p = parseStandardLink(tLine, 'vless');
+                                            else if (tLine.startsWith('trojan://')) p = parseStandardLink(tLine, 'trojan');
+                                            else if (tLine.startsWith('ss://')) {
+                                                try {
+                                                    const url = new URL(tLine);
+                                                    p = {
+                                                        id: Math.random().toString(36).substr(2, 9),
+                                                        name: decodeURIComponent(url.hash.slice(1)) || 'SS Node',
+                                                        type: 'ss',
+                                                        server: url.hostname,
+                                                        port: url.port,
+                                                        raw: tLine
+                                                    };
+                                                } catch (e) { }
+                                            } else if (tLine.startsWith('hysteria2://') || tLine.startsWith('hy2://')) {
+                                                p = parseStandardLink(tLine.replace('hysteria2://', 'https://').replace('hy2://', 'https://'), 'hysteria2');
+                                                if (p) { p.type = 'hysteria2'; p.raw = tLine; }
+                                            }
+
+                                            if (p) {
+                                                // 标记为论坛来源
+                                                p.isFromForum = true;
+                                                p.forumSource = 'linux.do';
+                                                p.importedAt = new Date().toISOString();
+                                                subProxies.push(p);
+                                            }
+                                        }
+
+                                        // 去重并添加
+                                        const existing = new Set(proxies.value.map(x => x.raw));
+                                        const newSubProxies = subProxies.filter(x => !existing.has(x.raw));
+                                        if (newSubProxies.length > 0) {
+                                            // 保存到服务器
+                                            try {
+                                                await fetch('/api/manual/proxies', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ proxies: newSubProxies })
+                                                });
+                                            } catch (e) { }
+                                            proxies.value = [...proxies.value, ...newSubProxies];
+                                            importedCount += newSubProxies.length;
+                                        }
+                                    } catch (e) {
+                                        console.error('解析订阅失败:', subUrl, e);
+                                    }
+                                }
+                            }
+
+                            showToast(`Linux.do 导入完成！处理了 ${data.topicsProcessed} 个帖子，导入 ${importedCount} 个节点`);
+                        } else {
+                            showToast('导入失败: ' + (data.error || '未知错误'));
+                        }
+                    } catch (e) {
+                        console.error('Linux.do 导入失败:', e);
+                        showToast('导入失败: ' + e.message);
+                        // 确保停止轮询
+                        if (typeof logPoller !== 'undefined') {
+                            clearInterval(logPoller);
+                        }
+                    } finally {
+                        linuxDoLoading.value = false;
+                        inputUrl.value = '';
+                        rawContent.value = '';
+                        // 刷新手动节点列表
+                        await loadManualProxies();
+                    }
+                };
+
+                // Telegram 频道任务相关函数
+                const fetchTelegramStatus = async () => {
+                    try {
+                        const res = await fetch('/api/telegram/status');
+                        const data = await res.json();
+                        telegramStatus.value = data;
+                        telegramTaskRunning.value = data.isScheduled;
+                    } catch (e) {
+                        console.error('获取 Telegram 状态失败:', e);
+                    }
+                };
+
+                const toggleTelegramTask = async () => {
+                    telegramLoading.value = true;
+                    try {
+                        if (telegramTaskRunning.value) {
+                            // 停止任务
+                            await fetch('/api/telegram/stop', { method: 'POST' });
+                            showToast('Telegram 任务已停止');
+                            if (telegramStatusPoller) {
+                                clearInterval(telegramStatusPoller);
+                                telegramStatusPoller = null;
+                            }
+                        } else {
+                            // 启动任务
+                            await fetch('/api/telegram/start', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ intervalMinutes: 30 })
+                            });
+                            showToast('Telegram 任务已启动，每30分钟自动更新');
+                            // 开始状态轮询
+                            telegramStatusPoller = setInterval(fetchTelegramStatus, 2000);
+                        }
+                        await fetchTelegramStatus();
+                        // 加载 Telegram 节点
+                        await loadTelegramProxies();
+                    } catch (e) {
+                        showToast('操作失败: ' + e.message);
+                    } finally {
+                        telegramLoading.value = false;
+                    }
+                };
+
+                const loadTelegramProxies = async () => {
+                    try {
+                        const res = await fetch('/api/telegram/proxies');
+                        const data = await res.json();
+                        if (Array.isArray(data) && data.length > 0) {
+                            // 合并到主节点列表
+                            const existingRaws = new Set(proxies.value.map(p => p.raw));
+                            const newNodes = data.filter(n => !existingRaws.has(n.raw));
+                            if (newNodes.length > 0) {
+                                proxies.value = [...proxies.value, ...newNodes];
+                                showToast(`已加载 ${newNodes.length} 个 Telegram 节点`);
+                            }
+                        }
+                    } catch (e) {
+                        console.error('加载 Telegram 节点失败:', e);
+                    }
+                };
+
+                const formatTime = (isoString) => {
+                    if (!isoString) return '';
+                    const date = new Date(isoString);
+                    return date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+                };
+
+                // 初始化时获取 Telegram 状态
+                fetchTelegramStatus();
+
+                const checkLocalConnectivity = async () => {
+                    if (isLocalChecking.value) return;
+                    isLocalChecking.value = true;
+                    // hideFailed.value = true; 
+                    showToast('开始服务器连通性测试...');
+
+                    const candidates = filteredProxies.value.length > 0 ? filteredProxies.value : proxies.value;
+                    // Reset
+                    candidates.forEach(p => p.localLatency = undefined);
+
+                    try {
+                        const res = await fetch('/api/check_connectivity', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ proxies: candidates.map(p => ({ id: p.id, server: p.server, port: p.port })) })
+                        });
+
+                        const data = await res.json();
+
+                        if (data.success && data.results) {
+                            candidates.forEach(p => {
+                                const result = data.results[p.id];
+                                if (result) {
+                                    if (result.success) {
+                                        p.localLatency = result.latency;
+                                    } else {
+                                        p.localLatency = -1; // -1 for error/timeout
+                                    }
+                                } else {
+                                    p.localLatency = -1;
+                                }
+                            });
+                            showToast('服务器连通性测试完成');
+                        } else {
+                            showToast('测试失败: ' + (data.error || 'Server Error'));
+                        }
+                    } catch (e) {
+                        console.error('Check connectivity error', e);
+                        showToast('测试异常: ' + e.message);
+                    } finally {
+                        isLocalChecking.value = false;
+                    }
+                };
+
+                const clearProxies = () => {
+                    showClearModal.value = true;
+                };
+
+                const confirmClear = async () => {
+                    try {
+                        // 先调用服务器 API 清空所有节点文件
+                        const res = await fetch('/api/clear_all', { method: 'POST' });
+                        const data = await res.json();
+
+                        if (data.success) {
+                            proxies.value = [];
+                            manualProxies.value = [];
+                            selectedIds.value = new Set();
+                            showClearModal.value = false;
+                            showToast('已清空所有节点');
+                        } else {
+                            showToast('清空失败: ' + (data.error || '未知错误'));
+                        }
+                    } catch (e) {
+                        console.error('清空节点失败:', e);
+                        showToast('清空失败: ' + e.message);
+                    }
+                };
+
+                const deleteProxy = (id) => {
+                    proxies.value = proxies.value.filter(p => p.id !== id);
+                };
+
+                // --- Export Logic ---
+                const exportConfig = async (format) => {
+                    // 1. 确定要处理的节点集合 (已选 or 全部)
+                    let candidates = [];
+                    if (selectedCount.value > 0) {
+                        const s = selectedIds.value;
+                        candidates = proxies.value.filter(p => s.has(p.id));
+                    } else {
+                        // 如果有过滤条件（如仅显示TG），则只导出当前视图的节点
+                        // Fix: use allFilteredProxies to export ALL matching nodes, not just current page (filteredProxies is paginated)
+                        candidates = allFilteredProxies.value;
+                    }
+
+                    if (candidates.length === 0) return showToast('当前列表没有节点可导出');
+
+                    // 2. 智能过滤逻辑 - 已禁用 (因服务器端测试无法代表用户端连通性)
+                    // 现在的策略：导出全部选中的/列表中的节点，不过滤超时节点
+                    let nodesToExport = candidates;
+
+                    /* DISABLED FILTERING
+                    if (hasTestResults) {
+                        nodesToExport = candidates.filter(p => p.localLatency > 0 && p.localLatency < 20000);
+                        if (nodesToExport.length === 0) {
+                             if (confirm('当前选中的节点全部超时。是否强制导出所有？')) let nodesToExport = candidates;
+                             else return;
+                        } else if (nodesToExport.length < candidates.length) {
+                             // Optional: Toast "Filtered X nodes"
+                        }
+                    } else {
+                        let nodesToExport = candidates;
+                    }
+                    */
+
+                    if (format === 'base64') {
+                        const rawList = nodesToExport.map(p => p.raw).join('\n');
+                        const content = btoa(unescape(encodeURIComponent(rawList)));
+                        const blob = new Blob([content], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `aggregator_base64_${new Date().toISOString().slice(0, 10)}.txt`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        return;
+                    }
+
+                    // For Clash / Singbox
+                    try {
+                        let endpoint = '/api/convert';
+                        let body = { proxies: nodesToExport, type: format === 'clash' ? 'clash' : 'singbox' };
+
+                        const res = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(body)
+                        });
+
+                        if (!res.ok) {
+                            const txt = await res.text();
+                            throw new Error(txt || 'Server Error');
+                        }
+
+                        const blob = await res.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        const ext = format === 'clash' ? 'yaml' : 'json';
+                        a.download = `config_${format}_${new Date().toISOString().slice(0, 10)}.${ext}`;
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        showToast(`已成功导出 ${nodesToExport.length} 个可用节点`);
+
+                    } catch (e) {
+                        console.error(e);
+                        alert('导出失败: ' + e.message);
+                    }
+                };
+
+
+
+
+                // --- Toast ---
+                const toastMsg = ref('');
+                const showToast = (msg) => {
+                    toastMsg.value = msg;
+                    setTimeout(() => toastMsg.value = '', 3000);
+                };
+
+                // --- Cloud Aggregation ---
+                const cloudLoading = ref(false);
+                const cloudResult = ref('');
+
+                // Show modal automatically when cloud loading starts
+                watch(cloudLoading, (newVal) => {
+                    if (newVal) showLogModal.value = true;
+                });
+
+                const fetchCloudProxies = async () => {
+                    try {
+                        const res = await fetch('/api/proxies');
+                        if (res.ok) {
+                            const cloudList = await res.json();
+                            if (Array.isArray(cloudList) && cloudList.length > 0) {
+                                const existing = new Set(proxies.value.map(x => x.raw));
+                                const added = cloudList.filter(x => !existing.has(x.raw));
+                                proxies.value = [...proxies.value, ...added];
+                            }
+                        }
+                    } catch (e) { console.error('Silent cloud fetch failed', e); }
+                };
+
+                const refreshCloud = async () => {
+                    if (cloudLoading.value) return;
+                    cloudLoading.value = true;
+                    // Reset Logs
+                    serverLogs.value = [];
+
+                    try {
+                        const res = await fetch('/api/refresh', { method: 'POST' });
+                        const json = await res.json();
+
+                        if (!json.success && json.status !== 'fetching' && json.status !== 'testing') {
+                            showToast(`Error: ${json.message}`);
+                            cloudLoading.value = false;
+                            return;
+                        }
+                        pollStatus();
+                    } catch (e) {
+                        showToast(`Network Error: ${e.message}`);
+                        cloudLoading.value = false;
+                    }
+                };
+
+                const fetchAllNodes = async () => {
+                    if (cloudLoading.value) return;
+                    cloudLoading.value = true;
+                    serverLogs.value = [];
+                    showLogModal.value = true; // Show logs immediately
+
+                    try {
+                        const res = await fetch('/api/fetch_all', { method: 'POST' });
+                        const json = await res.json();
+
+                        if (!json.success) {
+                            showToast(`Error: ${json.message}`);
+                            cloudLoading.value = false;
+                            return;
+                        }
+                        pollStatus();
+                    } catch (e) {
+                        showToast(`Network Error: ${e.message}`);
+                        cloudLoading.value = false;
+                    }
+                };
+
+                // --- Auto Purity Checker ---
+                const autoCheckCount = ref(0);
+
+                const startAutoChecker = async () => {
+                    console.log('Auto-checker started (Batch Mode)');
+
+                    while (true) {
+                        try {
+                            // Find candidates
+                            // Priority 1: Current page
+                            let pageCandidates = filteredProxies.value.filter(p => !p.purity && !p.checking && !p.failedCheck);
+                            let others = proxies.value.filter(p => !p.purity && !p.checking && !p.failedCheck);
+
+                            // Combine candidates, prioritizing pageCandidates
+                            let batch = [];
+                            const batchSize = 25; // ip-api batch supports up to 100, but let's be conservative to avoid timeouts
+
+                            if (pageCandidates.length > 0) {
+                                batch = pageCandidates.slice(0, batchSize);
+                            }
+
+                            // Fill remaining slots with others if needed
+                            if (batch.length < batchSize) {
+                                let needed = batchSize - batch.length;
+                                // Filter out already added ones
+                                const currentIds = new Set(batch.map(p => p.id));
+                                for (let p of others) {
+                                    if (!currentIds.has(p.id)) {
+                                        batch.push(p);
+                                        if (batch.length >= batchSize) break;
+                                    }
+                                }
+                            }
+
+                            if (batch.length > 0) {
+                                // Update count
+                                autoCheckCount.value = proxies.value.filter(p => !p.purity && !p.failedCheck).length;
+
+                                await checkBatchPurity(batch);
+
+                                // Rate Limit Protection:
+                                // Batch endpoint limit: 15 requests per minute.
+                                // 60s / 15 = 4s interval.
+                                // Increased to 8000ms to be safe and avoid 429
+                                await new Promise(r => setTimeout(r, 8000));
+                            } else {
+                                autoCheckCount.value = 0;
+                                await new Promise(r => setTimeout(r, 3000));
+                            }
+                        } catch (e) {
+                            console.error('Checker error', e);
+                            await new Promise(r => setTimeout(r, 5000));
+                        }
+                    }
+                };
+
+                const handleGlobalPurityCheck = async () => {
+                    let nodesToCheck = [];
+                    let isForce = false;
+
+                    if (selectedCount.value > 0) {
+                        // 选中节点：强制刷新
+                        const ids = selectedIds.value;
+                        nodesToCheck = proxies.value.filter(p => ids.has(p.id));
+                        isForce = true;
+                    } else {
+                        // 未选中：默认全量检测（后端会处理缓存逻辑，如果想强制刷新所有，需用户确认）
+                        // 根据用户需求：“如一个都不勾选，则对全部节点重新检测并更新” -> 意味着全量强制
+                        // 但考虑到全量强制太猛，我们先弹个窗让用户选
+                        if (confirm('是否强制刷新全部节点的纯净度数据？\n\n点击“确定”强制重新检测所有节点（耗时较长）。\n点击“取消”仅检测无数据节点 (利用缓存补全)。')) {
+                            isForce = true;
+                        } else {
+                            isForce = false;
+                        }
+                        nodesToCheck = filteredProxies.value;
+                    }
+
+                    if (nodesToCheck.length === 0) return showToast('没有节点可检测');
+                    await checkBatchPurity(nodesToCheck, isForce);
+                };
+
+                const checkSelectedPurity = handleGlobalPurityCheck; // Alias for safety
+
+                // Single node check (always force)
+                const checkNodePurity = async (node) => {
+                    await checkBatchPurity([node], true);
+                };
+
+                const checkBatchPurity = async (nodes, force = false) => {
+                    // Filter out nodes already checking
+                    const targets = nodes.filter(n => !n.checking);
+                    if (targets.length === 0) return;
+
+                    purityChecking.value = true;
+                    const batchSize = 50; // Browser batch size
+
+                    // Helper
+                    const checkChunk = async (chunk) => {
+                        chunk.forEach(n => { n.checking = true; n.failedCheck = false; });
+                        try {
+                            const ips = chunk.map(n => n.server);
+                            const res = await fetch('/api/check_ip_batch', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ queries: ips, force: force })
+                            });
+
+                            if (res.ok) {
+                                const list = await res.json();
+                                const resultMap = {};
+                                list.forEach(item => resultMap[item.query] = item);
+
+                                chunk.forEach(node => {
+                                    node.checking = false;
+                                    const data = resultMap[node.server];
+                                    if (data && data.status === 'success') {
+                                        let score = 100;
+                                        if (data.hosting) score -= 40; else score += 5;
+                                        const isp = (data.isp || '').toLowerCase();
+                                        if (isp.includes('google') || isp.includes('amazon') || isp.includes('cloud') || isp.includes('microsoft')) {
+                                            score -= 10;
+                                        }
+                                        score = Math.max(0, Math.min(100, score));
+
+                                        node.purity = {
+                                            countryCode: data.countryCode,
+                                            isp: data.isp,
+                                            hosting: data.hosting
+                                        };
+                                        node.purityScore = score;
+                                    } else {
+                                        node.failedCheck = true;
+                                    }
+                                });
+                            } else {
+                                chunk.forEach(n => { n.checking = false; n.failedCheck = true; });
+                            }
+                        } catch (e) {
+                            chunk.forEach(n => { n.checking = false; n.failedCheck = true; });
+                            console.error(e);
+                        }
+                    };
+
+                    // Process all chunks
+                    let successCount = 0;
+                    let failCount = 0;
+
+                    for (let i = 0; i < targets.length; i += batchSize) {
+                        const chunk = targets.slice(i, i + batchSize);
+                        await checkChunk(chunk);
+                        // count results in this chunk
+                        chunk.forEach(node => {
+                            if (node.failedCheck) failCount++;
+                            else successCount++;
+                        });
+                    }
+
+                    purityChecking.value = false;
+                    const msg = force ? '强制更新完成' : '检测完成';
+                    showToast(`${msg}: 成功 ${successCount} 个, 失败 ${failCount} 个`);
+                };
+
+                // --- Server Status Sync ---
+                const serverStats = ref({ total: 0, active: 0 });
+
+                const checkServerStatus = async () => {
+                    try {
+                        const res = await fetch('/api/status');
+                        const state = await res.json();
+
+                        if (state.status !== 'idle') {
+                            // Resume monitoring
+                            cloudLoading.value = true;
+                            serverLogs.value = state.logs || [];
+                            showLogModal.value = true; // Auto-open if running
+                            pollStatus();
+                        }
+                    } catch (e) {
+                        console.error('Failed to sync server status', e);
+                    }
+                };
+
+                const pollStatus = () => {
+                    const interval = setInterval(async () => {
+                        try {
+                            const sRes = await fetch('/api/status');
+                            const state = await sRes.json();
+
+                            // Update Logs Real-time
+                            if (state.logs && Array.isArray(state.logs)) {
+                                serverLogs.value = state.logs;
+                            }
+
+                            // Update Stats
+                            serverStats.value = {
+                                total: state.total || 0,
+                                active: state.active || 0,
+                                nextUpdate: state.nextAutoUpdate,
+                                lastUpdated: state.lastUpdated
+                            };
+
+                            if (state.status === 'idle') {
+                                clearInterval(interval);
+                                cloudResult.value = 'Complete';
+                                showToast('云端聚合完成');
+                                await loadProxies(); // Reload all proxies from server
+                                cloudLoading.value = false;
+
+                                // Auto-close log window after a short delay
+                                setTimeout(() => {
+                                    showLogModal.value = false;
+                                }, 1500);
+                            }
+                        } catch (e) {
+                            clearInterval(interval);
+                            cloudLoading.value = false;
+                        }
+                    }, 1000);
+                };
+
+                onMounted(async () => {
+                    // 从服务器加载所有节点（云端 + 手动）
+                    await loadProxies();
+
+                    // Sync with potentially running background process
+                    checkServerStatus();
+
+                    // Start Background Worker (Purity Check) - DISABLED due to user request
+                    // startAutoChecker();
+                });
+
+                return {
+                    inputUrl, rawContent, proxies, loading, errorMsg, searchQuery, sortMode,
+                    showImportParams, showExportModal, showClearModal, showLogModal, // Added showLogModal
+                    toastMsg,
+                    parseContent, clearProxies, confirmClear, deleteProxy, exportConfig,
+                    filteredProxies, protocols, protocolStats, getProtocolColor, getProtocolBadgeColor,
+                    cloudLoading, cloudResult, refreshCloud, fetchAllNodes, checkNodePurity, autoCheckCount, serverLogs, logWindowRef, // Added logs
+                    currentPage, totalPages, nextPage, prevPage,
+                    getCountry, proxiesByType,
+                    selectedIds, toggleSelection, clearSelection, selectedCount, toggleSelectPage, pageSelected,
+                    purityChecking, checkSelectedPurity, handleGlobalPurityCheck, // 纯净度检查相关
+                    filterType, filterCountry, countries, countryStats,
+                    isLocalChecking, localCheckProgress, checkLocalConnectivity, hideFailed, totalVisibleCount, pageSize,
+                    modalStyle, startDrag, logWindowEl, serverStats, // Export serverStats
+                    showManualOnly, manualProxies, loadManualProxies, deleteManualProxy, // 手动节点相关
+                    showForumOnly, forumProxiesCount, // 论坛搜索相关
+                    showTelegramOnly, telegramProxiesCount, // Telegram 筛选相关
+                    linuxDoLoading, importFromLinuxDo, // Linux.do 导入
+                    // Telegram 频道抓取相关
+                    telegramLoading, telegramTaskRunning, telegramStatus,
+                    toggleTelegramTask, fetchTelegramStatus, loadTelegramProxies, formatTime
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
