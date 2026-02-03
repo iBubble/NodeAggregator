@@ -135,16 +135,7 @@ function fetchUrl(url, timeout = 15000, customHeaders = {}) {
     });
 }
 
-// 加载 Linux.do Cookie
-function getLinuxDoCookie() {
-    const configPath = path.join(ROOT, 'linuxdo_cookie.txt');
-    try {
-        if (fs.existsSync(configPath)) {
-            return fs.readFileSync(configPath, 'utf8').trim();
-        }
-    } catch (e) { }
-    return '';
-}
+
 // 读取 Linux.do Cookie
 function getLinuxDoCookie() {
     try {
