@@ -68,6 +68,42 @@ const globalState = {
     lastUpdated: null
 };
 
+// 计划任务日志
+const CRON_LOG_FILE = path.join(ROOT, 'cron_logs.json');
+let cronLogs = [];
+
+// 加载计划任务日志
+function loadCronLogs() {
+    try {
+        if (fs.existsSync(CRON_LOG_FILE)) {
+            cronLogs = JSON.parse(fs.readFileSync(CRON_LOG_FILE, 'utf8'));
+        }
+    } catch (e) {
+        cronLogs = [];
+    }
+}
+
+// 保存计划任务日志
+function saveCronLogs() {
+    try {
+        // 只保留最近 50 条记录
+        if (cronLogs.length > 50) {
+            cronLogs = cronLogs.slice(-50);
+        }
+        fs.writeFileSync(CRON_LOG_FILE, JSON.stringify(cronLogs, null, 2));
+    } catch (e) {
+        console.error('保存计划任务日志失败:', e);
+    }
+}
+
+// 添加计划任务日志
+function addCronLog(entry) {
+    cronLogs.push(entry);
+    saveCronLogs();
+}
+
+// 初始化加载
+loadCronLogs();
 
 
 function addLog(msg, type = 'info') {
@@ -983,27 +1019,63 @@ function stopClash() {
 }
 
 // --- 节点验证 (使用 Clash External Controller API) ---
-async function checkProxyDelay(proxyName, timeout = 10000) {
-    // 稍微放宽策略：只要能访问 Google 或 Facebook 之一就算可用
+async function checkProxyDelay(proxyName, timeout = 5000) {
     const testUrls = [
         'http://www.gstatic.com/generate_204',
         'https://www.google.com/generate_204',
         'https://www.facebook.com/'
     ];
 
-    for (const testUrl of testUrls) {
-        const delay = await checkSingleUrl(proxyName, timeout, testUrl);
-        if (delay > 0) return delay;
+    const controller = new AbortController(); // 用于取消其他未完成的请求
+    const signal = controller.signal;
+
+    try {
+        return await new Promise((resolve) => {
+            let failureCount = 0;
+            let resolved = false;
+
+            testUrls.forEach(async (url) => {
+                if (signal.aborted) return;
+
+                // Pass signal to checkSingleUrl
+                const delay = await checkSingleUrl(proxyName, timeout, url, signal);
+
+                if (resolved) return;
+
+                if (delay > 0) {
+                    resolved = true;
+                    controller.abort(); // Cancel other requests immediately
+                    resolve(delay);
+                } else {
+                    failureCount++;
+                    if (failureCount === testUrls.length) {
+                        resolve(-1);
+                    }
+                }
+            });
+        });
+    } catch (e) {
+        return -1;
     }
-    return -1;
 }
 
-async function checkSingleUrl(proxyName, timeout, testUrl) {
+// Global Agent to manage connections
+const httpAgent = new http.Agent({ keepAlive: true, maxSockets: 100 });
+
+async function checkSingleUrl(proxyName, timeout, testUrl, signal = null) {
     return new Promise((resolve) => {
+        if (signal?.aborted) return resolve(-1);
+
         const encodedName = encodeURIComponent(proxyName);
         const url = `http://${CLASH_EXTERNAL_CONTROLLER}/proxies/${encodedName}/delay?timeout=${timeout}&url=${encodeURIComponent(testUrl)}`;
 
-        const req = http.get(url, { timeout: timeout + 2000 }, (res) => {
+        const options = {
+            timeout: timeout + 1000, // Slightly longer than API timeout
+            agent: httpAgent,
+            signal: signal
+        };
+
+        const req = http.get(url, options, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => {
@@ -1020,44 +1092,55 @@ async function checkSingleUrl(proxyName, timeout, testUrl) {
             });
         });
 
-        req.on('error', () => resolve(-1));
-        req.on('timeout', () => { req.destroy(); resolve(-1); });
+        req.on('error', (e) => {
+            // Abort assertions are expected
+            resolve(-1);
+        });
+
+        req.on('timeout', () => {
+            req.destroy();
+            resolve(-1);
+        });
     });
 }
 
+// 简单的并发控制 helper
+async function mapLimit(items, concurrency, fn) {
+    const results = [];
+    const iterator = items.entries();
+    const workers = new Array(Math.min(concurrency, items.length)).fill(iterator).map(async (iter) => {
+        for (const [index, item] of iter) {
+            results[index] = await fn(item);
+        }
+    });
+    await Promise.all(workers);
+    return results;
+}
+
 // 并发验证
-async function validateProxies(proxies, concurrency = 64, delay = 10000) {
+async function validateProxies(proxies, concurrency = 24, delay = 5000) {
     addLog(`开始验证 ${proxies.length} 个节点 (并发: ${concurrency}, 超时: ${delay}ms)`, 'info');
 
     let validated = 0;
     let valid = 0;
 
-    // 分批处理
-    const batchSize = concurrency;
-    for (let i = 0; i < proxies.length; i += batchSize) {
-        const batch = proxies.slice(i, i + batchSize);
+    await mapLimit(proxies, concurrency, async (p) => {
+        const latency = await checkProxyDelay(p._clashName || p.name, delay);
+        validated++;
 
-        const results = await Promise.all(
-            batch.map(async (p) => {
-                const latency = await checkProxyDelay(p._clashName || p.name, delay);
-                validated++;
-
-                if (latency > 0) {
-                    valid++;
-                    p.latency = latency;
-                    return true;
-                }
-                p.latency = -1;
-                return false;
-            })
-        );
+        if (latency > 0) {
+            valid++;
+            p.latency = latency;
+        } else {
+            p.latency = -1;
+        }
 
         // 更新进度
-        if (validated % 100 === 0 || validated === proxies.length) {
+        if (validated % 50 === 0 || validated === proxies.length) {
             addLog(`验证进度: ${validated}/${proxies.length}, 有效: ${valid}`, 'info');
             globalState.active = valid;
         }
-    }
+    });
 
     const validProxies = proxies.filter(p => p.latency > 0);
     addLog(`验证完成: ${validProxies.length}/${proxies.length} 有效`, 'success');
@@ -1155,26 +1238,22 @@ function fetchViaProxy(url, timeout = 5000) {
 }
 
 // 批量纯净度检测
-async function checkPurityBatch(proxies, concurrency = 10) {
+async function checkPurityBatch(proxies, concurrency = 16) {
     addLog(`开始纯净度检测 (${proxies.length} 个节点)...`, 'info');
 
     let checked = 0;
-    const batchSize = concurrency;
 
-    for (let i = 0; i < proxies.length; i += batchSize) {
-        const batch = proxies.slice(i, i + batchSize);
+    // 使用 mapLimit 替代 batch，避免短板效应
+    await mapLimit(proxies, concurrency, async (p) => {
+        const result = await checkPurity(p, p._clashName || p.name);
+        p.purityScore = result.score;
+        p.purityInfo = result;
+        checked++;
 
-        await Promise.all(batch.map(async (p) => {
-            const result = await checkPurity(p, p._clashName || p.name);
-            p.purityScore = result.score;
-            p.purityInfo = result;
-            checked++;
-        }));
-
-        if (checked % 20 === 0 || checked === proxies.length) {
+        if (checked % 10 === 0 || checked === proxies.length) {
             addLog(`纯净度检测进度: ${checked}/${proxies.length}`, 'info');
         }
-    }
+    });
 
     addLog(`纯净度检测完成`, 'success');
 }
@@ -1898,6 +1977,29 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // API: 生成/更新 Aggregator.yaml 配置文件
+    if (parsedUrl.pathname === '/api/generate_yaml' && req.method === 'POST') {
+        try {
+            await saveAggregatorYaml();
+            res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
+            res.end(JSON.stringify({ success: true, message: 'Aggregator.yaml 已更新' }));
+        } catch (e) {
+            res.writeHead(500, { 'Content-Type': 'application/json', ...headers });
+            res.end(JSON.stringify({ success: false, message: e.message }));
+        }
+        return;
+    }
+
+    // API: 获取计划任务日志
+    if (parsedUrl.pathname === '/api/cron_logs' && req.method === 'GET') {
+        res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
+        res.end(JSON.stringify({
+            logs: cronLogs.slice().reverse(), // 最新的在前面
+            nextRun: globalState.nextAutoUpdate
+        }));
+        return;
+    }
+
     // API: Telegram 频道任务状态
 
 
@@ -2173,7 +2275,7 @@ const server = http.createServer(async (req, res) => {
     const MANUAL_PROXIES_FILE = path.join(ROOT, 'manual_proxies.json');
 
     // Helper: Check TCP Connectivity
-    function checkTcpConnectivity(host, port, timeout = 5000) {
+    function checkTcpConnectivity(host, port, timeout = 3000) {
         return new Promise((resolve) => {
             const start = Date.now();
             const socket = new net.Socket();
@@ -2223,7 +2325,7 @@ const server = http.createServer(async (req, res) => {
             // Limit concurrency
             const results = {};
             const queue = [...proxies];
-            const concurrency = 20;
+            const concurrency = 64; // Increased from 20 for faster batch processing
             const activeWorkers = [];
 
             const worker = async () => {
@@ -2459,14 +2561,407 @@ function startAutoUpdateJob() {
     // Set first next update time
     globalState.nextAutoUpdate = new Date(Date.now() + AUTO_UPDATE_INTERVAL).toISOString();
 
-    autoUpdateTimer = setInterval(() => {
-        addLog('⏰ 触发定时任务: 全网节点更新 (深度爬取 200 页)', 'info');
-        runAggregation('all', 200); // Full Fetch with Deep Crawl
-        // Update next time
-        globalState.nextAutoUpdate = new Date(Date.now() + AUTO_UPDATE_INTERVAL).toISOString();
+    autoUpdateTimer = setInterval(async () => {
+        const startTime = new Date();
+        const logEntry = {
+            id: Date.now(),
+            startTime: startTime.toISOString(),
+            endTime: null,
+            duration: null,
+            status: 'running',
+            type: '全网节点更新',
+            details: {
+                beforeCount: 0,
+                afterCount: 0,
+                newNodes: 0,
+                yamlGenerated: false
+            },
+            error: null
+        };
+
+        try {
+            addLog('⏰ 触发定时任务: 全网节点更新 (深度爬取 200 页)', 'info');
+
+            // 记录执行前节点数
+            const proxiesFile = path.join(ROOT, 'proxies.json');
+            try {
+                const data = fs.readFileSync(proxiesFile, 'utf8');
+                logEntry.details.beforeCount = JSON.parse(data).length;
+            } catch (e) { }
+
+            // 执行聚合任务
+            await runAggregation('all', 200);
+
+            // 记录执行后节点数
+            try {
+                const data = fs.readFileSync(proxiesFile, 'utf8');
+                logEntry.details.afterCount = JSON.parse(data).length;
+                logEntry.details.newNodes = logEntry.details.afterCount - logEntry.details.beforeCount;
+            } catch (e) { }
+
+            // 执行连通性检测
+            addLog('🔍 开始自动连通性检测...', 'info');
+            const connResult = await runConnectivityCheck();
+            logEntry.details.connectivity = connResult;
+
+            // 执行纯净度检测
+            addLog('🛡️ 开始自动纯净度检测...', 'info');
+            const purityResult = await runPurityCheck();
+            logEntry.details.purity = purityResult;
+
+            // Auto-generate Aggregator.yaml
+            await saveAggregatorYaml();
+            logEntry.details.yamlGenerated = true;
+
+            logEntry.status = 'success';
+            addLog(`✅ 定时任务完成: 节点 ${logEntry.details.beforeCount}→${logEntry.details.afterCount}, 可用 ${connResult.passed}, 纯净度 ${purityResult.updated}`, 'success');
+
+        } catch (e) {
+            logEntry.status = 'error';
+            logEntry.error = e.message;
+            addLog(`❌ 定时任务失败: ${e.message}`, 'error');
+        } finally {
+            const endTime = new Date();
+            logEntry.endTime = endTime.toISOString();
+            logEntry.duration = Math.round((endTime - startTime) / 1000); // 秒
+            addCronLog(logEntry);
+
+            // Update next time
+            globalState.nextAutoUpdate = new Date(Date.now() + AUTO_UPDATE_INTERVAL).toISOString();
+        }
     }, AUTO_UPDATE_INTERVAL);
 
     console.log(`  自动更新任务已启动 (每 6 小时)`);
+}
+
+// Helper: 批量连通性检测
+async function runConnectivityCheck() {
+    const proxiesFile = path.join(ROOT, 'proxies.json');
+    let proxies = [];
+
+    try {
+        if (fs.existsSync(proxiesFile)) {
+            proxies = JSON.parse(fs.readFileSync(proxiesFile, 'utf8'));
+        }
+    } catch (e) {
+        addLog(`❌ 读取节点文件失败: ${e.message}`, 'error');
+        return { tested: 0, passed: 0, failed: 0 };
+    }
+
+    if (proxies.length === 0) {
+        return { tested: 0, passed: 0, failed: 0 };
+    }
+
+    addLog(`🔍 开始连通性检测: ${proxies.length} 个节点`, 'info');
+
+    const concurrency = 64;
+    const queue = [...proxies];
+    const results = {};
+    let passed = 0;
+    let failed = 0;
+
+    const worker = async () => {
+        while (queue.length > 0) {
+            const p = queue.shift();
+            if (!p || !p.server || !p.port) continue;
+
+            try {
+                const start = Date.now();
+                const socket = new net.Socket();
+                const timeout = 3000;
+
+                const result = await new Promise((resolve) => {
+                    socket.setTimeout(timeout);
+
+                    socket.on('connect', () => {
+                        const time = Date.now() - start;
+                        socket.destroy();
+                        resolve({ success: true, latency: time });
+                    });
+
+                    socket.on('timeout', () => {
+                        socket.destroy();
+                        resolve({ success: false, error: 'Timeout' });
+                    });
+
+                    socket.on('error', (err) => {
+                        resolve({ success: false, error: err.message });
+                    });
+
+                    try {
+                        socket.connect(parseInt(p.port), p.server);
+                    } catch (e) {
+                        resolve({ success: false, error: e.message });
+                    }
+                });
+
+                results[p.id] = result;
+                if (result.success) passed++;
+                else failed++;
+            } catch (e) {
+                results[p.id] = { success: false, error: e.message };
+                failed++;
+            }
+        }
+    };
+
+    const workers = [];
+    for (let i = 0; i < concurrency; i++) workers.push(worker());
+    await Promise.all(workers);
+
+    // 更新节点数据
+    proxies.forEach(p => {
+        if (results[p.id]) {
+            if (results[p.id].success) {
+                p.localLatency = results[p.id].latency;
+            } else {
+                p.localLatency = -1; // 表示失败
+            }
+        }
+    });
+
+    // 保存更新后的节点
+    fs.writeFileSync(proxiesFile, JSON.stringify(proxies, null, 2));
+    addLog(`✅ 连通性检测完成: ${passed}/${proxies.length} 个可用`, 'success');
+
+    return { tested: proxies.length, passed, failed };
+}
+
+// Helper: 批量纯净度检测
+async function runPurityCheck() {
+    const proxiesFile = path.join(ROOT, 'proxies.json');
+    let proxies = [];
+
+    try {
+        if (fs.existsSync(proxiesFile)) {
+            proxies = JSON.parse(fs.readFileSync(proxiesFile, 'utf8'));
+        }
+    } catch (e) {
+        addLog(`❌ 读取节点文件失败: ${e.message}`, 'error');
+        return { checked: 0, updated: 0 };
+    }
+
+    // 只检测还没有纯净度信息的节点或连通性测试通过的节点
+    const toCheck = proxies.filter(p => !p.purityInfo && p.localLatency && p.localLatency > 0);
+
+    if (toCheck.length === 0) {
+        addLog(`ℹ️ 无需进行纯净度检测（所有节点已有数据或不可用）`, 'info');
+        return { checked: 0, updated: 0 };
+    }
+
+    addLog(`🛡️ 开始纯净度检测: ${toCheck.length} 个节点`, 'info');
+
+    const uniqueServers = [...new Set(toCheck.map(p => p.server))];
+    const purityResults = {};
+    const batchSize = 100;
+    let updated = 0;
+
+    // 使用 ip-api 批量检测
+    for (let i = 0; i < uniqueServers.length; i += batchSize) {
+        const batch = uniqueServers.slice(i, i + batchSize);
+
+        try {
+            const response = await new Promise((resolve, reject) => {
+                const postData = JSON.stringify(batch.map(ip => ({ query: ip, fields: 'status,countryCode,isp,org,hosting,proxy,query' })));
+
+                const req = http.request({
+                    hostname: 'ip-api.com',
+                    port: 80,
+                    path: '/batch?fields=status,countryCode,isp,org,hosting,proxy,query',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Content-Length': Buffer.byteLength(postData)
+                    }
+                }, (res) => {
+                    let body = '';
+                    res.on('data', chunk => body += chunk);
+                    res.on('end', () => {
+                        try {
+                            resolve(JSON.parse(body));
+                        } catch (e) {
+                            reject(e);
+                        }
+                    });
+                });
+
+                req.on('error', reject);
+                req.setTimeout(30000, () => {
+                    req.destroy();
+                    reject(new Error('Timeout'));
+                });
+                req.write(postData);
+                req.end();
+            });
+
+            // 处理结果
+            if (Array.isArray(response)) {
+                response.forEach(item => {
+                    if (item.status === 'success') {
+                        // 计算纯净度分数
+                        let score = 100;
+                        const isp = (item.isp || '').toLowerCase();
+                        const org = (item.org || '').toLowerCase();
+                        const dcKeywords = ['cloud', 'data', 'hosting', 'server', 'network', 'alibaba', 'tencent', 'amazon', 'google', 'microsoft', 'azure', 'digitalocean', 'vultr', 'linode', 'oracle', 'ovh', 'cdn'];
+
+                        if (dcKeywords.some(k => isp.includes(k) || org.includes(k))) {
+                            score -= 40;
+                        }
+                        if (item.hosting) score -= 20;
+                        if (item.proxy) score -= 15;
+                        score = Math.max(0, Math.min(100, score));
+
+                        purityResults[item.query] = {
+                            score,
+                            countryCode: item.countryCode,
+                            isp: item.isp,
+                            org: item.org,
+                            hosting: item.hosting,
+                            proxy: item.proxy
+                        };
+                    }
+                });
+            }
+
+            // 避免 rate limit
+            if (i + batchSize < uniqueServers.length) {
+                await new Promise(r => setTimeout(r, 1500));
+            }
+        } catch (e) {
+            addLog(`⚠️ 纯净度检测批次失败: ${e.message}`, 'warning');
+        }
+    }
+
+    // 更新节点数据
+    proxies.forEach(p => {
+        if (purityResults[p.server]) {
+            p.purityInfo = purityResults[p.server];
+            p.purityScore = purityResults[p.server].score;
+            updated++;
+        }
+    });
+
+    // 保存更新后的节点
+    fs.writeFileSync(proxiesFile, JSON.stringify(proxies, null, 2));
+    addLog(`✅ 纯净度检测完成: ${updated} 个节点已更新`, 'success');
+
+    return { checked: uniqueServers.length, updated };
+}
+
+// Helper: Save Aggregator.yaml
+async function saveAggregatorYaml() {
+    try {
+        // Load proxies from files (same as /api/proxies)
+        let proxies = [];
+        const proxiesFile = path.join(ROOT, 'proxies.json');
+        const manualFile = path.join(ROOT, 'manual_proxies.json');
+
+        if (fs.existsSync(proxiesFile)) {
+            try {
+                const data = fs.readFileSync(proxiesFile, 'utf8');
+                proxies = JSON.parse(data);
+            } catch (e) { }
+        }
+
+        if (fs.existsSync(manualFile)) {
+            try {
+                const data = fs.readFileSync(manualFile, 'utf8');
+                const manual = JSON.parse(data);
+                if (Array.isArray(manual)) {
+                    proxies = [...proxies, ...manual];
+                }
+            } catch (e) { }
+        }
+
+        if (proxies.length === 0) {
+            addLog('⚠️ 无节点可生成 Aggregator.yaml', 'warning');
+            return;
+        }
+
+        // 复用导出配置的逻辑 (与 /api/convert 完全一致)
+        const uniqueNames = new Set();
+        const proxyList = [];
+
+        for (const p of proxies) {
+            const obj = proxyToClashObj(p);
+            if (!obj) continue;
+
+            // 名称处理：保留原名，仅去除首尾空格
+            let name = (obj.name || 'node').replace(/^\s+|\s+$/g, '');
+
+            // 解决名称冲突：添加后缀 _1, _2 等
+            let finalName = name;
+            let counter = 1;
+            while (uniqueNames.has(finalName)) {
+                finalName = `${name}_${counter++}`;
+            }
+            uniqueNames.add(finalName);
+            obj.name = finalName;
+
+            proxyList.push(obj);
+        }
+
+        // Use template logic (Simplified version of existing export logic)
+        const templatePath = path.join(ROOT, 'clash_template.yaml');
+        let config = {};
+
+        if (fs.existsSync(templatePath)) {
+            try {
+                const templateContent = fs.readFileSync(templatePath, 'utf8');
+                config = yaml.load(templateContent);
+                const oldNodeNames = new Set((config.proxies || []).map(p => p.name));
+                config.proxies = proxyList;
+                const newProxyNames = proxyList.map(p => p.name);
+
+                if (config['proxy-groups']) {
+                    config['proxy-groups'].forEach(group => {
+                        const originalProxies = group.proxies || [];
+                        const hasOldNodes = originalProxies.some(p => oldNodeNames.has(p));
+                        if (hasOldNodes) {
+                            const newGroupProxies = [];
+                            let nodesInserted = false;
+                            for (const p of originalProxies) {
+                                if (oldNodeNames.has(p)) {
+                                    if (!nodesInserted) {
+                                        newGroupProxies.push(...newProxyNames);
+                                        nodesInserted = true;
+                                    }
+                                } else {
+                                    newGroupProxies.push(p);
+                                }
+                            }
+                            group.proxies = newGroupProxies;
+                        }
+                    });
+                }
+            } catch (e) { config = { proxies: proxyList }; }
+        } else {
+            config = { proxies: proxyList };
+        }
+
+        let yamlStr = yaml.dump(config, { lineWidth: -1, noRefs: true });
+        const nowStr = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        const header = [
+            '#---------------------------------------------------#',
+            `## 更新：${nowStr}`,
+            '## Generator: Antigravity Aggregator',
+            '# Auto-generated by Scheduled Task',
+            '#---------------------------------------------------#',
+            ''
+        ].join('\n');
+        yamlStr = header + yamlStr;
+
+        const outputPath = path.join(ROOT, 'Projects', 'Aggregator', 'Aggregator.yaml');
+        // Ensure directory exists
+        const dir = path.dirname(outputPath);
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+        fs.writeFileSync(outputPath, yamlStr);
+        addLog(`✅ 自动生成配置文件: ${outputPath}`, 'success');
+    } catch (e) {
+        addLog(`❌ 自动生成 Aggregator.yaml 失败: ${e.message}`, 'error');
+        console.error(e);
+    }
 }
 
 server.listen(PORT, () => {
@@ -2478,6 +2973,9 @@ server.listen(PORT, () => {
 
     // Start the job
     startAutoUpdateJob();
+
+    // Initial generation on startup (optional but good for ensuring file exists)
+    saveAggregatorYaml();
 });
 
 // 优雅退出

@@ -115,11 +115,12 @@
                 </div>
             </div>
             <div class="flex space-x-3">
-                <button @click="showImportParams = !showImportParams"
-                    class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition flex items-center text-sm">
-                    <span class="material-icons-round text-base mr-2">settings</span>
-                    设置
-                </button>
+                <!-- Settings Removed as requested -->
+                <a href="Aggregator.yaml" download="Aggregator.yaml" target="_blank"
+                    class="px-4 py-2 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/30 text-emerald-400 transition flex items-center text-sm font-mono">
+                    <span class="material-icons-round text-base mr-2">description</span>
+                    Aggregator.yaml
+                </a>
                 <div class="relative group">
                     <div
                         class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt">
@@ -168,8 +169,15 @@
                         <!-- 自动更新信息 (紧跟全网获取按钮) -->
                         <div
                             class="flex flex-col space-y-1 text-[10px] text-slate-400 font-mono bg-black/20 p-2 rounded border border-purple-500/20">
-                            <div class="flex justify-between">
+                            <div class="flex justify-between items-center">
                                 <span>⏰ 自动更新: 每6小时 (全网抓取)</span>
+                                <button @click="showCronLogModal = true"
+                                    class="text-indigo-400 hover:text-indigo-300 underline transition-colors"
+                                    title="查看计划任务执行日志">
+                                    📋 日志
+                                </button>
+                            </div>
+                            <div class="flex justify-between">
                                 <span v-if="serverStats.nextUpdate" class="text-indigo-300">
                                     下次: {{ formatTime(serverStats.nextUpdate) }}
                                 </span>
@@ -286,11 +294,19 @@
 
             <!-- Main Content / List -->
             <div class="lg:col-span-8">
-                <div v-if="proxies.length === 0"
+                <div v-if="proxies.length === 0 && !loading"
                     class="h-full flex flex-col items-center justify-center text-center p-10 border-2 border-dashed border-slate-700 rounded-3xl opacity-50">
                     <span class="material-icons-round text-6xl text-slate-600 mb-4">dns</span>
                     <h3 class="text-xl font-medium text-slate-300">暂无节点数据</h3>
                     <p class="text-slate-500 mt-2 max-w-sm">请在左侧添加订阅链接或粘贴原始内容以开始使用。</p>
+                </div>
+
+                <div v-else-if="proxies.length === 0 && loading"
+                    class="h-full flex flex-col items-center justify-center text-center p-10">
+                    <div
+                        class="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent mb-4">
+                    </div>
+                    <h3 class="text-xl font-medium text-slate-300">加载中...</h3>
                 </div>
 
                 <div v-else class="space-y-4">
@@ -759,6 +775,97 @@
             </div>
         </div>
 
+        <!-- Cron Log Modal (计划任务日志) -->
+        <div v-if="showCronLogModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="showCronLogModal = false"></div>
+            <div
+                class="glass-panel w-full max-w-2xl rounded-2xl p-6 relative z-10 animate-fade-in-up border border-indigo-500/30 max-h-[80vh] overflow-hidden flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center text-indigo-400">
+                        <span class="material-icons-round text-2xl mr-2">schedule</span>
+                        <h3 class="text-xl font-bold text-white">计划任务日志</h3>
+                    </div>
+                    <button @click="showCronLogModal = false" class="text-slate-400 hover:text-white transition-colors">
+                        <span class="material-icons-round">close</span>
+                    </button>
+                </div>
+
+                <div v-if="cronNextRun" class="text-xs text-slate-400 mb-3 font-mono bg-black/20 p-2 rounded">
+                    ⏰ 下次执行: {{ formatTime(cronNextRun) }}
+                </div>
+
+                <div class="overflow-y-auto flex-1">
+                    <div v-if="cronLogs.length === 0" class="text-center text-slate-500 py-8">
+                        <span class="material-icons-round text-4xl mb-2">inbox</span>
+                        <p>暂无计划任务执行记录</p>
+                    </div>
+                    <div v-else class="space-y-2">
+                        <div v-for="log in cronLogs" :key="log.id" class="p-3 rounded-lg bg-slate-800/50 border text-sm"
+                            :class="log.status === 'success' ? 'border-emerald-500/30' : log.status === 'error' ? 'border-red-500/30' : 'border-yellow-500/30'">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <span v-if="log.status === 'success'" class="text-emerald-400">✅</span>
+                                    <span v-else-if="log.status === 'error'" class="text-red-400">❌</span>
+                                    <span v-else class="text-yellow-400 animate-pulse">⏳</span>
+                                    <span class="font-medium text-white">{{ log.type }}</span>
+                                </div>
+                                <span class="text-xs text-slate-500">{{ formatTime(log.startTime) }}</span>
+                            </div>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-400">
+                                <div>
+                                    <span class="text-slate-500">耗时: </span>
+                                    <span class="text-white">{{ formatDuration(log.duration) }}</span>
+                                </div>
+                                <div v-if="log.details">
+                                    <span class="text-slate-500">节点: </span>
+                                    <span class="text-white">{{ log.details.beforeCount }} → {{ log.details.afterCount
+                                        }}</span>
+                                </div>
+                                <div v-if="log.details && log.details.newNodes !== 0">
+                                    <span class="text-slate-500">变化: </span>
+                                    <span :class="log.details.newNodes > 0 ? 'text-emerald-400' : 'text-red-400'">
+                                        {{ log.details.newNodes > 0 ? '+' : '' }}{{ log.details.newNodes }}
+                                    </span>
+                                </div>
+                                <div v-if="log.details">
+                                    <span class="text-slate-500">YAML: </span>
+                                    <span :class="log.details.yamlGenerated ? 'text-emerald-400' : 'text-slate-500'">
+                                        {{ log.details.yamlGenerated ? '已生成' : '未生成' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- 连通性和纯净度检测结果 -->
+                            <div v-if="log.details && (log.details.connectivity || log.details.purity)"
+                                class="mt-2 pt-2 border-t border-slate-700/50 grid grid-cols-2 gap-2 text-xs text-slate-400">
+                                <div v-if="log.details.connectivity">
+                                    <span class="text-slate-500">🔍 连通性: </span>
+                                    <span class="text-emerald-400">{{ log.details.connectivity.passed }}</span>
+                                    <span class="text-slate-500">/</span>
+                                    <span class="text-white">{{ log.details.connectivity.tested }}</span>
+                                    <span class="text-slate-500"> 可用</span>
+                                </div>
+                                <div v-if="log.details.purity">
+                                    <span class="text-slate-500">🛡️ 纯净度: </span>
+                                    <span class="text-indigo-400">{{ log.details.purity.updated }}</span>
+                                    <span class="text-slate-500"> 个已检测</span>
+                                </div>
+                            </div>
+                            <div v-if="log.error" class="mt-2 text-xs text-red-400 bg-red-500/10 p-2 rounded">
+                                错误: {{ log.error }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                    <button @click="loadCronLogs"
+                        class="px-4 py-2 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 text-sm transition-colors">
+                        <span class="material-icons-round text-sm mr-1">refresh</span>刷新
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Toast -->
         <transition name="fade">
             <div v-if="toastMsg" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
@@ -796,12 +903,17 @@
                 const localCheckProgress = ref('');
                 const linuxDoLoading = ref(false); // Linux.do 导入加载状态
 
-                const showImportParams = ref(false);
+
                 const showExportModal = ref(false);
                 const showClearModal = ref(false);
                 const showLogModal = ref(false); // Controls visibility of log window
                 const showDedupeModal = ref(false); // 去重确认对话框
                 const dedupeInfo = ref({ removedCount: 0, uniqueNodes: [], targets: [], isSelective: false }); // 去重临时数据
+
+                // 计划任务日志
+                const showCronLogModal = ref(false);
+                const cronLogs = ref([]);
+                const cronNextRun = ref(null);
 
                 const serverLogs = ref([]); // Stores logs from server
                 const logWindowRef = ref(null);
@@ -892,6 +1004,7 @@
 
                 // Persistence - 从服务器加载数据
                 const loadProxies = async () => {
+                    loading.value = true; // Show loading indicator
                     try {
                         // 从服务器加载云端抓取的节点
                         const res = await fetch('/api/proxies');
@@ -924,9 +1037,19 @@
                         });
 
                         proxies.value = allProxies;
-                        console.log(`Loaded ${cloudProxies.length} cloud + ${manualData.length} manual proxies from server`);
+                        console.log(`加载完成: ${cloudProxies.length} 云端 + ${manualData.length} 手动节点`);
+
+                        // 自动更新 Aggregator.yaml 配置文件
+                        if (allProxies.length > 0) {
+                            fetch('/api/generate_yaml', { method: 'POST' })
+                                .then(r => r.json())
+                                .then(d => console.log('Aggregator.yaml 已自动更新'))
+                                .catch(e => console.warn('YAML 生成失败:', e));
+                        }
                     } catch (e) {
-                        console.error('Failed to load proxies from server:', e);
+                        console.error('从服务器加载节点失败:', e);
+                    } finally {
+                        loading.value = false; // 隐藏加载指示器
                     }
                 };
 
@@ -943,6 +1066,11 @@
 
                 // Reset page on search or sort change
                 watch([searchQuery, sortMode, filterType, filterCountry], () => currentPage.value = 1);
+
+                // 打开计划任务日志时自动加载
+                watch(showCronLogModal, (val) => {
+                    if (val) loadCronLogs();
+                });
 
                 // --- Computed ---
                 const getCountry = (node) => {
@@ -1454,6 +1582,27 @@
                     }
                 };
 
+                // 加载计划任务日志
+                const loadCronLogs = async () => {
+                    try {
+                        const res = await fetch('/api/cron_logs');
+                        const data = await res.json();
+                        cronLogs.value = data.logs || [];
+                        cronNextRun.value = data.nextRun;
+                    } catch (e) {
+                        console.error('加载计划任务日志失败:', e);
+                    }
+                };
+
+                // 格式化持续时间
+                const formatDuration = (seconds) => {
+                    if (!seconds) return '-';
+                    if (seconds < 60) return `${seconds}秒`;
+                    const min = Math.floor(seconds / 60);
+                    const sec = seconds % 60;
+                    return `${min}分${sec}秒`;
+                };
+
                 // 删除手动节点
                 const deleteManualProxy = async (proxy) => {
                     if (!proxy.id) return;
@@ -1647,6 +1796,11 @@
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ proxies: manualNodes })
                         });
+
+                        // 去重后自动更新 Aggregator.yaml
+                        fetch('/api/generate_yaml', { method: 'POST' })
+                            .then(() => console.log('去重后 Aggregator.yaml 已更新'))
+                            .catch(e => console.warn('YAML 更新失败:', e));
                     } catch (e) {
                         console.error('保存去重结果失败:', e);
                     }
@@ -1671,20 +1825,28 @@
                     candidates.forEach(p => p.localLatency = undefined);
 
                     try {
-                        // 分批测试以免 Payload 太大
-                        const batchSize = 100;
+                        // 并行批量测试 (Frontend Concurrency)
+                        const batchSize = 30;
                         const total = candidates.length;
+                        let processed = 0;
 
+                        // Create batches
+                        const batches = [];
                         for (let i = 0; i < total; i += batchSize) {
-                            const batch = candidates.slice(i, i + batchSize);
+                            batches.push(candidates.slice(i, i + batchSize));
+                        }
 
+                        // Concurrency Control Helper
+                        const concurrency = 5; // allow 5 parallel requests (5 * 30 = 150 nodes being checked)
+                        const results = [];
+
+                        const executeBatch = async (batch) => {
                             try {
                                 const res = await fetch('/api/check_connectivity', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ proxies: batch.map(p => ({ id: p.id, server: p.server, port: p.port })) })
                                 });
-
                                 const data = await res.json();
                                 if (data.success && data.results) {
                                     batch.forEach(p => {
@@ -1697,11 +1859,44 @@
                                         }
                                     });
                                 }
-                            } catch (e) { console.error(e); }
+                            } catch (e) {
+                                console.error(e);
+                                batch.forEach(p => p.localLatency = -1);
+                            } finally {
+                                processed += batch.length;
+                                localCheckProgress.value = `(${processed}/${total})`;
+                            }
+                        };
 
-                            // 进度提示
-                            if (total > 200) showToast(`测试进度: ${Math.min(i + batchSize, total)} / ${total}`);
-                        }
+                        // Run with concurrency limit
+                        const runPool = async () => {
+                            const executing = [];
+                            for (const batch of batches) {
+                                const p = executeBatch(batch);
+                                executing.push(p);
+                                if (executing.length >= concurrency) {
+                                    await Promise.race(executing); // Wait for one to finish
+                                    // Remove finished promises
+                                    // Note: Promise.race returns the value, but we need to remove the resolved promise from 'executing' array.
+                                    // Easier way: simply wait for slot.
+                                    // Actually, standard pool pattern:
+                                }
+                                // Simple cleanup for the race implementation above (imperfect but works for simple cases, or use library)
+                                // Let's use a simpler "chunked by concurrency" approach or a recursive worker.
+                            }
+                            await Promise.all(executing);
+                        };
+
+                        // Recursive Worker Approach for cleaner concurrency
+                        const worker = async (iterator) => {
+                            for (const batch of iterator) {
+                                await executeBatch(batch);
+                            }
+                        };
+
+                        const iterator = batches.values();
+                        const workers = Array(Math.min(concurrency, batches.length)).fill(0).map(() => worker(iterator));
+                        await Promise.all(workers);
 
                         showToast('服务器连通性测试完成');
                     } catch (e) {
@@ -2117,12 +2312,14 @@
                     }, 1000);
                 };
 
-                onMounted(async () => {
-                    // 从服务器加载所有节点（云端 + 手动）
-                    await loadProxies();
+                onMounted(() => {
+                    // 立即开始加载节点（不阻塞）
+                    loadProxies();
 
-                    // Sync with potentially running background process
-                    checkServerStatus();
+                    // 延迟检查服务器状态，优先展示节点
+                    setTimeout(() => {
+                        checkServerStatus();
+                    }, 500);
 
                     // Start Background Worker (Purity Check) - DISABLED due to user request
                     // startAutoChecker();
@@ -2130,7 +2327,7 @@
 
                 return {
                     inputUrl, rawContent, proxies, loading, errorMsg, searchQuery, sortMode,
-                    showImportParams, showExportModal, showClearModal, showLogModal, // Added showLogModal
+                    showExportModal, showClearModal, showLogModal,
                     toastMsg,
                     parseContent, clearProxies, confirmClear, deleteProxy, exportConfig,
                     filteredProxies, protocols, protocolStats, getProtocolColor, getProtocolBadgeColor,
@@ -2147,7 +2344,9 @@
                     linuxDoLoading, importFromLinuxDo, // Linux.do 导入
                     handleTestAndDeduplicate, // 测试并去重
                     showDedupeModal, dedupeInfo, confirmDedupe, // 去重确认对话框
-                    formatTime
+                    formatTime,
+                    // 计划任务日志相关
+                    showCronLogModal, cronLogs, cronNextRun, loadCronLogs, formatDuration
                 };
             }
         }).mount('#app');

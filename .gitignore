@@ -4,3 +4,6 @@ backups/
 myenv/
 *.tar.gz
 .DS_Store
+clash_bin/cache.db
+temp_err_tail.txt
+temp_out_tail.txt
