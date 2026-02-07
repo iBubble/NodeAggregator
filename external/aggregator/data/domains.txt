@@ -527,7 +527,7 @@ https://www.networkportforward.top	@#@#		@#@#		@#@#
 https://alicmcn.ivansen.com	@#@#		@#@#		@#@#	
 https://ssp.ivansen.com	@#@#		@#@#		@#@#	
 https://in.fastss.de	@#@#		@#@#		@#@#	
-https://10rjc.com	@#@#		@#@#		@#@#	
+https://10rjc.com	@#@#		@#@#		@#@#	/api?scheme=
 https://servernode.store	@#@#		@#@#		@#@#	
 https://seclusion.pro	@#@#		@#@#		@#@#	
 https://1.starbebo.sbs	@#@#		@#@#		@#@#	
@@ -824,3 +824,10 @@ https://ld88.nxxbbf.com	@#@#		@#@#		@#@#
 https://vnvun.com	@#@#		@#@#		@#@#	
 https://gsgs.nxxbbf.com	@#@#		@#@#		@#@#	
 https://www.kuaileigo.com	@#@#		@#@#		@#@#	
+https://board.kihao.shop	@#@#		@#@#		@#@#	
+https://a.galaxysub01.pro	@#@#		@#@#		@#@#	
+https://b.galaxysub01.pro	@#@#		@#@#		@#@#	
+https://qjty.qjty.shop	@#@#		@#@#		@#@#	
+https://vip02.onlyrabbit.cc	@#@#		@#@#		@#@#	
+https://vip01.lightspeed.club	@#@#		@#@#		@#@#	
+https://vip02.lightspeed.club	@#@#		@#@#		@#@#	
