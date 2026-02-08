@@ -13,6 +13,7 @@ const net = require('net');
 const os = require('os');
 const { spawn } = require('child_process');
 const yaml = require('js-yaml');
+const cron = require('node-cron');
 
 
 
@@ -65,12 +66,42 @@ const globalState = {
     total: 0,
     active: 0,
     logs: [],
-    lastUpdated: null
+    lastUpdated: null,
+    // 各来源节点获取统计 (每次聚合任务后更新)
+    lastFetchStats: {
+        github: 0,
+        web: 0,
+        linuxdo: 0
+    }
 };
 
 // 计划任务日志
 const CRON_LOG_FILE = path.join(ROOT, 'cron_logs.json');
 let cronLogs = [];
+
+// 纯净度检测数据库
+const PURITY_DB_FILE = path.join(ROOT, 'purity_db.json');
+let purityDB = {};
+
+// 加载纯净度数据库
+function loadPurityDB() {
+    try {
+        if (fs.existsSync(PURITY_DB_FILE)) {
+            purityDB = JSON.parse(fs.readFileSync(PURITY_DB_FILE, 'utf8'));
+        }
+    } catch (e) {
+        purityDB = {};
+    }
+}
+
+// 保存纯净度数据库
+function savePurityDB() {
+    try {
+        fs.writeFileSync(PURITY_DB_FILE, JSON.stringify(purityDB, null, 2));
+    } catch (e) {
+        console.error('保存纯净度数据库失败:', e);
+    }
+}
 
 // 加载计划任务日志
 function loadCronLogs() {
@@ -104,6 +135,7 @@ function addCronLog(entry) {
 
 // 初始化加载
 loadCronLogs();
+loadPurityDB();
 
 
 function addLog(msg, type = 'info') {
@@ -823,8 +855,8 @@ function generateClashConfig(proxies) {
     const addedNames = [];
 
     for (const p of proxies) {
-        // 净化名称
-        let name = (p.name || 'node').replace(/[,"]/g, '').trim();
+        // 净化名称 - 确保 name 是字符串类型
+        let name = String(p.name || 'node').replace(/[,"]/g, '').trim();
         if (!name) name = `node_${Math.random().toString(36).substr(2, 5)}`;
 
         // 确保名称唯一
@@ -1610,12 +1642,17 @@ async function runAggregation(mode = 'github', pages = 50) {
 
     addLog(`开始聚合任务 (模式: ${mode === 'all' ? '全网获取' : 'Github 更新'}, 爬取深度: ${pages})...`, 'info');
 
+    // 重置各来源统计
+    globalState.lastFetchStats = { github: 0, web: 0, linuxdo: 0 };
+
     try {
         let proxies = [];
 
         // 1. 获取 Github 节点 (总是执行)
         try {
             const githubProxies = await fetchSubscriptions(pages);
+            globalState.lastFetchStats.github = githubProxies.length;
+            addLog(`Github 订阅获取完成，获得 ${githubProxies.length} 个节点`, 'success');
             proxies.push(...githubProxies);
         } catch (e) {
             addLog(`Github 获取失败: ${e.message}`, 'error');
@@ -1628,6 +1665,8 @@ async function runAggregation(mode = 'github', pages = 50) {
             // 网站抓取 (Blog/Deep Search)
             try {
                 const webProxies = await scrapeWebSites();
+                globalState.lastFetchStats.web = webProxies.length;
+                addLog(`网站抓取完成，获得 ${webProxies.length} 个节点`, 'success');
                 proxies.push(...webProxies);
             } catch (e) {
                 addLog(`网站抓取失败: ${e.message}`, 'error');
@@ -1637,9 +1676,12 @@ async function runAggregation(mode = 'github', pages = 50) {
             try {
                 addLog('========== 开始 Linux.do 论坛抓取 ==========', 'info');
                 const linuxDoProxies = await fetchFromLinuxDo();
+                globalState.lastFetchStats.linuxdo = linuxDoProxies.length;
                 if (linuxDoProxies.length > 0) {
                     addLog(`Linux.do 抓取完成，获得 ${linuxDoProxies.length} 个节点`, 'success');
                     proxies.push(...linuxDoProxies);
+                } else {
+                    addLog('Linux.do 抓取完成，未获得有效节点', 'warning');
                 }
             } catch (e) {
                 addLog(`Linux.do 抓取失败: ${e.message}`, 'error');
@@ -1672,6 +1714,16 @@ async function runAggregation(mode = 'github', pages = 50) {
         // 5. 验证节点 (放宽条件: 10秒超时, 50并发)
         addLog('========== 开始节点验证 (并发: 50, 超时: 10000ms) ==========', 'info');
         const validProxies = await validateProxies(proxies, 50, 10000);
+
+        // 输出各来源验证通过统计
+        if (mode === 'all') {
+            const linuxdoValid = validProxies.filter(p => p.forumSource === 'linux.do').length;
+            const linuxdoTotal = proxies.filter(p => p.forumSource === 'linux.do').length;
+            addLog(`📊 Linux.do 验证结果: ${linuxdoValid}/${linuxdoTotal} 通过`, linuxdoValid > 0 ? 'success' : 'warning');
+
+            // 更新统计信息
+            globalState.lastFetchStats.linuxdoValid = linuxdoValid;
+        }
 
         // 6. 纯净度检测 (仅检测有效节点)
         if (validProxies.length > 0) {
@@ -1861,30 +1913,7 @@ const server = http.createServer(async (req, res) => {
 
     const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 
-    // API: Github 刷新 (原 /api/refresh)
-    if (parsedUrl.pathname === '/api/refresh' && req.method === 'POST') {
-        let body = '';
-        req.on('data', chunk => body += chunk);
-        req.on('end', () => {
-            let mode = 'github';
-            let pages = 50; // Default pages for manual trigger
-            try {
-                const data = JSON.parse(body);
-                if (data.mode) mode = data.mode;
-                if (data.pages) pages = parseInt(data.pages, 10);
-            } catch (e) { }
 
-            if (globalState.status === 'idle') {
-                runAggregation(mode, pages);
-                res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
-                res.end(JSON.stringify({ success: true, message: `${mode === 'all' ? '全网' : 'Github'}聚合任务已启动 (深度: ${pages})` }));
-            } else {
-                res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
-                res.end(JSON.stringify({ success: false, message: '任务进行中', status: globalState.status }));
-            }
-        });
-        return;
-    }
 
     // API: 全网抓取 (Github + Telegram + Others)
     if (parsedUrl.pathname === '/api/fetch_all' && req.method === 'POST') {
@@ -1959,8 +1988,40 @@ const server = http.createServer(async (req, res) => {
 
     // API: 状态
     if (parsedUrl.pathname === '/api/status' && req.method === 'GET') {
+        // 获取服务器运行时间
+        let serverUptime = '';
+        let serverBootTime = '';
+        let serverBootTimeRaw = null;
+        try {
+            const { execSync } = require('child_process');
+            serverUptime = execSync('uptime -p', { encoding: 'utf8' }).trim();
+
+            // 获取原始启动时间（服务器本地时间）
+            const rawBootTime = execSync('uptime -s', { encoding: 'utf8' }).trim();
+
+            // rawBootTime 格式: "2026-02-07 11:57:55" (服务器本地时间)
+            // 直接解析为 Date 对象（JavaScript 会按本地时区解释）
+            const localDate = new Date(rawBootTime.replace(' ', 'T'));
+
+            // localDate.getTime() 返回 UTC 毫秒，直接加 8 小时得到北京时间
+            const beijingOffset = 8 * 60 * 60 * 1000;
+            const beijingTime = new Date(localDate.getTime() + beijingOffset);
+
+            // 格式化为 YYYY-MM-DD HH:mm:ss
+            const pad = (n) => n.toString().padStart(2, '0');
+            serverBootTime = `${beijingTime.getUTCFullYear()}-${pad(beijingTime.getUTCMonth() + 1)}-${pad(beijingTime.getUTCDate())} ${pad(beijingTime.getUTCHours())}:${pad(beijingTime.getUTCMinutes())}:${pad(beijingTime.getUTCSeconds())}`;
+            serverBootTimeRaw = beijingTime.toISOString();
+        } catch (e) {
+            serverUptime = 'unknown';
+        }
+
         res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
-        res.end(JSON.stringify(globalState));
+        res.end(JSON.stringify({
+            ...globalState,
+            serverUptime,
+            serverBootTime,
+            serverBootTimeRaw
+        }));
         return;
     }
 
@@ -1979,14 +2040,27 @@ const server = http.createServer(async (req, res) => {
 
     // API: 生成/更新 Aggregator.yaml 配置文件
     if (parsedUrl.pathname === '/api/generate_yaml' && req.method === 'POST') {
-        try {
-            await saveAggregatorYaml();
-            res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
-            res.end(JSON.stringify({ success: true, message: 'Aggregator.yaml 已更新' }));
-        } catch (e) {
-            res.writeHead(500, { 'Content-Type': 'application/json', ...headers });
-            res.end(JSON.stringify({ success: false, message: e.message }));
-        }
+        let bodyRaw = [];
+        req.on('data', chunk => bodyRaw.push(chunk));
+        req.on('end', async () => {
+            try {
+                let proxies = null;
+                const str = Buffer.concat(bodyRaw).toString();
+                if (str) {
+                    try {
+                        const json = JSON.parse(str);
+                        if (Array.isArray(json)) proxies = json;
+                    } catch (e) { }
+                }
+
+                await saveAggregatorYaml(proxies);
+                res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
+                res.end(JSON.stringify({ success: true, message: 'Aggregator.yaml 已更新' }));
+            } catch (e) {
+                res.writeHead(500, { 'Content-Type': 'application/json', ...headers });
+                res.end(JSON.stringify({ success: false, message: e.message }));
+            }
+        });
         return;
     }
 
@@ -2145,7 +2219,7 @@ const server = http.createServer(async (req, res) => {
 
                     // 名称处理：优先保留原名
                     // 仅移除可能导致 YAML 解析错误的字符，不做过度净化
-                    let name = (obj.name || 'node').replace(/^\s+|\s+$/g, ''); // Trim only
+                    let name = String(obj.name || 'node').replace(/^\s+|\s+$/g, ''); // Trim only
 
                     // 解决名称冲突：添加后缀 _1, _2 等
                     let finalName = name;
@@ -2551,87 +2625,154 @@ const server = http.createServer(async (req, res) => {
     }
 });
 
-// --- 自动更新任务 ---
-const AUTO_UPDATE_INTERVAL = 6 * 60 * 60 * 1000; // 6 Hours
-let autoUpdateTimer = null;
+// --- 自动更新任务 (使用 cron 定点执行) ---
+// 北京时间 00:10, 06:10, 12:10, 18:10 => 美东时间 11:10, 17:10, 23:10, 05:10
+// Cron 表达式 (美东时间): 10 5,11,17,23 * * *
+const CRON_SCHEDULE = '10 5,11,17,23 * * *';
+let cronTask = null;
 
-function startAutoUpdateJob() {
-    if (autoUpdateTimer) clearInterval(autoUpdateTimer);
+// 计算下次执行时间 (北京时间)
+function getNextCronRunTime() {
+    const now = new Date();
+    // 北京时间执行点：00:10, 06:10, 12:10, 18:10
+    const beijingHours = [0, 6, 12, 18];
+    const minute = 10;
 
-    // Set first next update time
-    globalState.nextAutoUpdate = new Date(Date.now() + AUTO_UPDATE_INTERVAL).toISOString();
+    // 获取当前北京时间 (getTime() 返回 UTC 毫秒，直接加8小时偏移)
+    const beijingOffset = 8 * 60 * 60 * 1000;
+    const beijingNowMs = now.getTime() + beijingOffset;
+    const beijingNow = new Date(beijingNowMs);
 
-    autoUpdateTimer = setInterval(async () => {
-        const startTime = new Date();
-        const logEntry = {
-            id: Date.now(),
-            startTime: startTime.toISOString(),
-            endTime: null,
-            duration: null,
-            status: 'running',
-            type: '全网节点更新',
-            details: {
-                beforeCount: 0,
-                afterCount: 0,
-                newNodes: 0,
-                yamlGenerated: false
-            },
-            error: null
+    const pad = (n) => n.toString().padStart(2, '0');
+    const formatBeijingTime = (d) => {
+        return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} (北京)`;
+    };
+
+    for (const hour of beijingHours) {
+        // 构造北京时间的下次执行点
+        const nextRunBeijing = new Date(Date.UTC(
+            beijingNow.getUTCFullYear(),
+            beijingNow.getUTCMonth(),
+            beijingNow.getUTCDate(),
+            hour, minute, 0, 0
+        ));
+        if (nextRunBeijing.getTime() > beijingNowMs) {
+            return formatBeijingTime(nextRunBeijing);
+        }
+    }
+    // 如果今天所有时间点都过了，返回明天第一个时间点
+    const tomorrowBeijing = new Date(Date.UTC(
+        beijingNow.getUTCFullYear(),
+        beijingNow.getUTCMonth(),
+        beijingNow.getUTCDate() + 1,
+        beijingHours[0], minute, 0, 0
+    ));
+    return formatBeijingTime(tomorrowBeijing);
+}
+
+async function runScheduledTask() {
+    const startTime = new Date();
+    const logEntry = {
+        id: Date.now(),
+        startTime: startTime.toISOString(),
+        endTime: null,
+        duration: null,
+        status: 'running',
+        type: '全网节点更新',
+        details: {
+            beforeCount: 0,
+            afterCount: 0,
+            newNodes: 0,
+            yamlGenerated: false
+        },
+        error: null
+    };
+
+    try {
+        addLog('⏰ 触发定时任务: 全网节点更新 (深度爬取 200 页)', 'info');
+
+        // 记录执行前节点数 (包含手动添加的节点)
+        const proxiesFile = path.join(ROOT, 'proxies.json');
+        const manualProxiesFile = path.join(ROOT, 'manual_proxies.json');
+
+        const getTotalNodeCount = () => {
+            let count = 0;
+            try {
+                const data = fs.readFileSync(proxiesFile, 'utf8');
+                count += JSON.parse(data).length;
+            } catch (e) { }
+            try {
+                const manualData = fs.readFileSync(manualProxiesFile, 'utf8');
+                count += JSON.parse(manualData).length;
+            } catch (e) { }
+            return count;
         };
 
-        try {
-            addLog('⏰ 触发定时任务: 全网节点更新 (深度爬取 200 页)', 'info');
+        logEntry.details.beforeCount = getTotalNodeCount();
 
-            // 记录执行前节点数
-            const proxiesFile = path.join(ROOT, 'proxies.json');
-            try {
-                const data = fs.readFileSync(proxiesFile, 'utf8');
-                logEntry.details.beforeCount = JSON.parse(data).length;
-            } catch (e) { }
+        // 执行聚合任务
+        await runAggregation('all', 200);
 
-            // 执行聚合任务
-            await runAggregation('all', 200);
+        // 记录执行后节点数 (包含手动添加的节点)
+        logEntry.details.afterCount = getTotalNodeCount();
+        logEntry.details.newNodes = logEntry.details.afterCount - logEntry.details.beforeCount;
 
-            // 记录执行后节点数
-            try {
-                const data = fs.readFileSync(proxiesFile, 'utf8');
-                logEntry.details.afterCount = JSON.parse(data).length;
-                logEntry.details.newNodes = logEntry.details.afterCount - logEntry.details.beforeCount;
-            } catch (e) { }
+        // 记录各来源节点获取统计 (从 globalState 获取)
+        logEntry.details.sources = {
+            github: globalState.lastFetchStats.github,
+            web: globalState.lastFetchStats.web,
+            linuxdo: globalState.lastFetchStats.linuxdo,
+            linuxdoValid: globalState.lastFetchStats.linuxdoValid || 0
+        };
 
-            // 执行连通性检测
-            addLog('🔍 开始自动连通性检测...', 'info');
-            const connResult = await runConnectivityCheck();
-            logEntry.details.connectivity = connResult;
+        // 执行连通性检测
+        addLog('🔍 开始自动连通性检测...', 'info');
+        const connResult = await runConnectivityCheck();
+        logEntry.details.connectivity = connResult;
 
-            // 执行纯净度检测
-            addLog('🛡️ 开始自动纯净度检测...', 'info');
-            const purityResult = await runPurityCheck();
-            logEntry.details.purity = purityResult;
+        // 执行纯净度检测
+        addLog('🛡️ 开始自动纯净度检测...', 'info');
+        const purityResult = await runPurityCheck();
+        logEntry.details.purity = purityResult;
 
-            // Auto-generate Aggregator.yaml
-            await saveAggregatorYaml();
-            logEntry.details.yamlGenerated = true;
+        // Auto-generate Aggregator.yaml
+        await saveAggregatorYaml();
+        logEntry.details.yamlGenerated = true;
 
-            logEntry.status = 'success';
-            addLog(`✅ 定时任务完成: 节点 ${logEntry.details.beforeCount}→${logEntry.details.afterCount}, 可用 ${connResult.passed}, 纯净度 ${purityResult.updated}`, 'success');
+        logEntry.status = 'success';
+        addLog(`✅ 定时任务完成: 节点 ${logEntry.details.beforeCount}→${logEntry.details.afterCount}, 可用 ${connResult.passed}, 纯净度 ${purityResult.updated}`, 'success');
 
-        } catch (e) {
-            logEntry.status = 'error';
-            logEntry.error = e.message;
-            addLog(`❌ 定时任务失败: ${e.message}`, 'error');
-        } finally {
-            const endTime = new Date();
-            logEntry.endTime = endTime.toISOString();
-            logEntry.duration = Math.round((endTime - startTime) / 1000); // 秒
-            addCronLog(logEntry);
+    } catch (e) {
+        logEntry.status = 'error';
+        logEntry.error = e.message;
+        addLog(`❌ 定时任务失败: ${e.message}`, 'error');
+    } finally {
+        const endTime = new Date();
+        logEntry.endTime = endTime.toISOString();
+        logEntry.duration = Math.round((endTime - startTime) / 1000); // 秒
+        addCronLog(logEntry);
 
-            // Update next time
-            globalState.nextAutoUpdate = new Date(Date.now() + AUTO_UPDATE_INTERVAL).toISOString();
-        }
-    }, AUTO_UPDATE_INTERVAL);
+        // Update next time
+        globalState.nextAutoUpdate = getNextCronRunTime();
+    }
+}
 
-    console.log(`  自动更新任务已启动 (每 6 小时)`);
+function startAutoUpdateJob() {
+    if (cronTask) {
+        cronTask.stop();
+    }
+
+    // Set first next update time
+    globalState.nextAutoUpdate = getNextCronRunTime();
+
+    // 使用 cron 定时执行
+    // 美东时间: 05:10, 11:10, 17:10, 23:10 (对应北京时间 18:10, 00:10, 06:10, 12:10)
+    cronTask = cron.schedule(CRON_SCHEDULE, async () => {
+        await runScheduledTask();
+    });
+
+    console.log(`  自动更新任务已启动 (北京时间 00:10, 06:10, 12:10, 18:10)`);
+    console.log(`  下次执行: ${globalState.nextAutoUpdate}`);
 }
 
 // Helper: 批量连通性检测
@@ -2849,28 +2990,36 @@ async function runPurityCheck() {
 }
 
 // Helper: Save Aggregator.yaml
-async function saveAggregatorYaml() {
+// Helper: Save Aggregator.yaml
+// Accepts optional 'data' array. If provided, uses that data instead of reading files.
+async function saveAggregatorYaml(data = null) {
     try {
-        // Load proxies from files (same as /api/proxies)
         let proxies = [];
-        const proxiesFile = path.join(ROOT, 'proxies.json');
-        const manualFile = path.join(ROOT, 'manual_proxies.json');
 
-        if (fs.existsSync(proxiesFile)) {
-            try {
-                const data = fs.readFileSync(proxiesFile, 'utf8');
-                proxies = JSON.parse(data);
-            } catch (e) { }
-        }
+        if (data && Array.isArray(data)) {
+            proxies = data;
+            addLog(`📝 使用前端传入的 ${proxies.length} 个节点生成 Aggregator.yaml`, 'info');
+        } else {
+            // Load proxies from files (same as /api/proxies)
+            const proxiesFile = path.join(ROOT, 'proxies.json');
+            const manualFile = path.join(ROOT, 'manual_proxies.json');
 
-        if (fs.existsSync(manualFile)) {
-            try {
-                const data = fs.readFileSync(manualFile, 'utf8');
-                const manual = JSON.parse(data);
-                if (Array.isArray(manual)) {
-                    proxies = [...proxies, ...manual];
-                }
-            } catch (e) { }
+            if (fs.existsSync(proxiesFile)) {
+                try {
+                    const data = fs.readFileSync(proxiesFile, 'utf8');
+                    proxies = JSON.parse(data);
+                } catch (e) { }
+            }
+
+            if (fs.existsSync(manualFile)) {
+                try {
+                    const data = fs.readFileSync(manualFile, 'utf8');
+                    const manual = JSON.parse(data);
+                    if (Array.isArray(manual)) {
+                        proxies = [...proxies, ...manual];
+                    }
+                } catch (e) { }
+            }
         }
 
         if (proxies.length === 0) {
@@ -2887,7 +3036,7 @@ async function saveAggregatorYaml() {
             if (!obj) continue;
 
             // 名称处理：保留原名，仅去除首尾空格
-            let name = (obj.name || 'node').replace(/^\s+|\s+$/g, '');
+            let name = String(obj.name || 'node').replace(/^\s+|\s+$/g, '');
 
             // 解决名称冲突：添加后缀 _1, _2 等
             let finalName = name;
@@ -2981,14 +3130,14 @@ server.listen(PORT, () => {
 // 优雅退出
 process.on('SIGINT', () => {
     console.log('\n正在关闭...');
-    if (autoUpdateTimer) clearInterval(autoUpdateTimer);
+    if (cronTask) cronTask.stop();
     stopClash();
     server.close();
     process.exit(0);
 });
 
 process.on('SIGTERM', () => {
-    if (autoUpdateTimer) clearInterval(autoUpdateTimer);
+    if (cronTask) cronTask.stop();
     stopClash();
     server.close();
     process.exit(0);

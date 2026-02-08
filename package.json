@@ -10,6 +10,7 @@
     "imap-simple": "^5.1.0",
     "js-yaml": "^4.1.1",
     "mailparser": "^3.9.3",
+    "node-cron": "^4.2.1",
     "puppeteer-core": "^19.11.1"
   }
 }
