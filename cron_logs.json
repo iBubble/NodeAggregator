@@ -94,5 +94,65 @@
       }
     },
     "error": null
+  },
+  {
+    "id": 1770588600030,
+    "startTime": "2026-02-08T22:10:00.030Z",
+    "endTime": "2026-02-08T22:34:38.372Z",
+    "duration": 1478,
+    "status": "success",
+    "type": "全网节点更新",
+    "details": {
+      "beforeCount": 887,
+      "afterCount": 1003,
+      "newNodes": 116,
+      "yamlGenerated": true,
+      "sources": {
+        "github": 1666,
+        "web": 0,
+        "linuxdo": 28,
+        "linuxdoValid": 2
+      },
+      "connectivity": {
+        "tested": 839,
+        "passed": 592,
+        "failed": 247
+      },
+      "purity": {
+        "checked": 22,
+        "updated": 91
+      }
+    },
+    "error": null
+  },
+  {
+    "id": 1770610200034,
+    "startTime": "2026-02-09T04:10:00.034Z",
+    "endTime": "2026-02-09T04:35:42.809Z",
+    "duration": 1543,
+    "status": "success",
+    "type": "全网节点更新",
+    "details": {
+      "beforeCount": 1003,
+      "afterCount": 1062,
+      "newNodes": 59,
+      "yamlGenerated": true,
+      "sources": {
+        "github": 1730,
+        "web": 0,
+        "linuxdo": 6,
+        "linuxdoValid": 2
+      },
+      "connectivity": {
+        "tested": 898,
+        "passed": 604,
+        "failed": 294
+      },
+      "purity": {
+        "checked": 38,
+        "updated": 107
+      }
+    },
+    "error": null
   }
 ]

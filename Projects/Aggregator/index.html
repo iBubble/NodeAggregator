@@ -295,7 +295,7 @@
 
             <!-- Main Content / List -->
             <div class="lg:col-span-8">
-                <div v-if="proxies.length === 0 && !loading"
+                <div v-if="proxies.length === 0 && !loading && !pageLoading"
                     class="h-full flex flex-col items-center justify-center text-center p-10 border-2 border-dashed border-slate-700 rounded-3xl opacity-50">
                     <span class="material-icons-round text-6xl text-slate-600 mb-4">dns</span>
                     <h3 class="text-xl font-medium text-slate-300">暂无节点数据</h3>
@@ -303,11 +303,34 @@
                 </div>
 
                 <div v-else-if="proxies.length === 0 && pageLoading"
-                    class="h-full flex flex-col items-center justify-center text-center p-10">
-                    <div
-                        class="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent mb-4">
+                    class="h-full flex flex-col items-center justify-center text-center p-10 space-y-6">
+                    <!-- Tech Loader -->
+                    <div class="relative w-24 h-24">
+                        <div class="absolute inset-0 border-t-4 border-indigo-500 rounded-full animate-spin"></div>
+                        <div
+                            class="absolute inset-2 border-r-4 border-purple-500 rounded-full animate-spin animation-delay-200">
+                        </div>
+                        <div
+                            class="absolute inset-4 border-b-4 border-emerald-500 rounded-full animate-spin animation-delay-500">
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="material-icons-round text-3xl text-white animate-pulse">radar</span>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-medium text-slate-300">加载中...</h3>
+                    <div class="space-y-2">
+                        <h3
+                            class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+                            正在扫描节点网络...
+                        </h3>
+                        <p class="text-slate-500 text-sm font-mono animate-pulse">{{ loadingStatusText || '初始化链路...' }}
+                        </p>
+                    </div>
+                    <!-- Slow loading tip -->
+                    <div v-if="showSlowLoadingTip"
+                        class="text-xs text-yellow-500/80 bg-yellow-500/10 px-4 py-2 rounded-full animate-fade-in-up">
+                        <span class="material-icons-round text-xs mr-1 align-text-bottom">info</span>
+                        响应较慢，正在尝试从备用链路获取...
+                    </div>
                 </div>
 
                 <div v-else class="space-y-4">
@@ -452,7 +475,7 @@
                                         d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
                                     </path>
                                 </svg>
-                                {{ isLocalChecking ? '去重中...' : '去重' }}
+                                {{ isLocalChecking ? '检测中...' : '检测/去重' }}
                             </button>
 
                             <!-- Generate YAML -->
@@ -941,6 +964,9 @@
                 const cronLogs = ref([]);
                 const cronNextRun = ref(null);
 
+                const loadingStatusText = ref('');
+                const showSlowLoadingTip = ref(false);
+
                 const serverLogs = ref([]); // Stores logs from server
                 const logWindowRef = ref(null);
                 const logWindowEl = ref(null);
@@ -1029,65 +1055,96 @@
                 const pageSize = ref(50); // Render 50 items per page
 
                 // Persistence - 从服务器加载数据
+                // Persistence - Incremental Loading
                 const loadProxies = async () => {
                     pageLoading.value = true;
-                    // loading.value = true; // DO NOT set this, it affects the manual button!
+                    // Reset UI state
+                    errorMsg.value = '';
+                    loadingStatusText.value = '正在扫描云端数据库...';
+                    showSlowLoadingTip.value = false;
+
+                    const loadedCloud = ref([]);
+                    const loadedManual = ref([]);
+
+                    // Slow tip timer
+                    const slowTimer = setTimeout(() => { showSlowLoadingTip.value = true; }, 3000);
 
                     try {
-                        const fetchWithTimeout = (url, ms = 10000) => {
+                        const fetchWithTimeout = (url, ms = 30000) => {
                             return Promise.race([
                                 fetch(url),
-                                new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout')), ms))
+                                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
                             ]);
                         };
 
-                        const res = await fetchWithTimeout('/api/proxies');
-                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                        const cloudProxies = await res.json();
+                        // Helper to merge and update view
+                        const updateView = () => {
+                            const all = [...loadedCloud.value];
+                            const existingRaw = new Set(all.map(p => p.raw));
 
-                        // 从服务器加载手动添加的节点
-                        const manualRes = await fetchWithTimeout('/api/manual_proxies', 5000);
-                        let manualData = []; // Default empty
-                        if (manualRes.ok) {
-                            try {
-                                manualData = await manualRes.json();
-                            } catch (e) {
-                                console.warn('Manual proxies json parse error', e);
+                            for (const mp of loadedManual.value) {
+                                if (!existingRaw.has(mp.raw)) {
+                                    all.push(mp);
+                                }
                             }
-                        }
-                        manualProxies.value = manualData;
 
-                        // 合并节点（去重）
-                        const allProxies = [...cloudProxies];
-                        const existingRaw = new Set(allProxies.map(p => p.raw));
+                            // Process purity
+                            all.forEach(p => {
+                                if (p.purityInfo && !p.purity) {
+                                    p.purity = {
+                                        countryCode: p.purityInfo.country || p.purityInfo.countryCode,
+                                        isp: p.purityInfo.isp || '',
+                                        hosting: p.purityInfo.hosting || false
+                                    };
+                                }
+                            });
 
-                        for (const mp of manualData) {
-                            if (!existingRaw.has(mp.raw)) {
-                                allProxies.push(mp);
-                            }
-                        }
+                            proxies.value = all;
+                        };
 
-                        // 将后端的 purityInfo 映射到前端显示需要的 purity 字段
-                        allProxies.forEach(p => {
-                            if (p.purityInfo && !p.purity) {
-                                p.purity = {
-                                    countryCode: p.purityInfo.country || p.purityInfo.countryCode,
-                                    isp: p.purityInfo.isp || '',
-                                    hosting: p.purityInfo.hosting || false
-                                };
-                            }
-                        });
+                        // 1. Fetch Cloud (Async)
+                        const cloudPromise = fetchWithTimeout('/api/proxies')
+                            .then(res => {
+                                if (!res.ok) throw new Error(res.status);
+                                return res.json();
+                            })
+                            .then(data => {
+                                loadedCloud.value = Array.isArray(data) ? data : [];
+                                updateView();
+                                loadingStatusText.value = `已加载 ${data.length} 个云端节点...`;
+                                console.log('Cloud loaded');
+                            })
+                            .catch(e => {
+                                console.error('Cloud fetch fail:', e);
+                                errorMsg.value += `Cloud Error: ${e.message} `;
+                            });
 
-                        proxies.value = allProxies;
-                        console.log(`加载完成: ${cloudProxies.length} 云端 + ${manualData.length} 手动节点`);
+                        // 2. Fetch Manual (Async)
+                        const manualPromise = fetchWithTimeout('/api/manual_proxies', 5000)
+                            .then(res => {
+                                if (!res.ok) throw new Error(res.status);
+                                return res.json();
+                            })
+                            .then(data => {
+                                loadedManual.value = Array.isArray(data) ? data : [];
+                                updateView();
+                                manualProxies.value = loadedManual.value; // Sync to manualProxies ref
+                                console.log('Manual loaded');
+                            })
+                            .catch(e => {
+                                console.warn('Manual fetch fail:', e);
+                            });
 
-                        // 注意: YAML 生成由后端定时任务在所有测试完成后统一执行
-                        // 前端不再自动触发，避免在扫描过程中重复生成
+                        // Wait for both to settle (but view updates incrementally)
+                        await Promise.allSettled([cloudPromise, manualPromise]);
+
                     } catch (e) {
-                        console.error('SERVER LOAD FAILED:', e);
-                        errorMsg.value = `Load Failed: ${e.message}`;
+                        console.error('Core Load Error:', e);
+                        errorMsg.value = e.message;
                     } finally {
+                        clearTimeout(slowTimer);
                         pageLoading.value = false;
+                        loadingStatusText.value = '';
                         loading.value = false; // Ensure global loading is off
                     }
                 };
@@ -1771,6 +1828,50 @@
                 // 初始化时获取 Telegram 状态
 
 
+                const deleteFailedNodes = async () => {
+                    const initialCount = proxies.value.length;
+                    const keepers = proxies.value.filter(p => p.localLatency !== -1);
+                    const removed = proxies.value.filter(p => p.localLatency === -1);
+
+                    if (removed.length > 0) {
+                        proxies.value = keepers;
+                        showToast(`已暴力移除 ${removed.length} 个超时废物节点 ❤`);
+
+                        // 1. 处理手动节点 (Manual)
+                        const manualIds = new Set(manualProxies.value.map(p => p.id));
+                        const removedManuals = removed.filter(p => manualIds.has(p.id));
+
+                        if (removedManuals.length > 0) {
+                            const idsToDelete = removedManuals.map(p => p.id);
+                            try {
+                                await fetch('/api/manual_proxies', {
+                                    method: 'DELETE',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ ids: idsToDelete })
+                                });
+                                manualProxies.value = manualProxies.value.filter(p => !idsToDelete.includes(p.id));
+                            } catch (e) { console.error(e); }
+                        }
+
+                        // 2. 处理云端节点 (Cloud) - 新增逻辑
+                        const removedCloud = removed.filter(p => !manualIds.has(p.id));
+                        if (removedCloud.length > 0) {
+                            const idsToDelete = removedCloud.map(p => p.id);
+                            try {
+                                await fetch('/api/proxies', {
+                                    method: 'DELETE',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ ids: idsToDelete })
+                                });
+                                console.log(`已删除 ${idsToDelete.length} 个云端节点`);
+                            } catch (e) { console.error('删除云端节点失败', e); }
+                        }
+
+                    } else {
+                        showToast('没有发现超时节点，好棒棒！');
+                    }
+                };
+
                 const handleTestAndDeduplicate = async () => {
                     if (isLocalChecking.value) return;
 
@@ -1801,8 +1902,7 @@
 
                     // 先遍历一遍，建立唯一索引
                     targets.forEach(p => {
-                        // 逻辑修正：与后端保持一致，仅当 Server + Port + (UUID/Password) 全都可以匹配时才视为重复
-                        // 原先只匹配 server 会导致多端口节点被误删
+                        // 逻辑修正：恢复 UUID/Password 校验，以防误删同一端口的不同账户节点
                         const server = (p.server || '').trim().toLowerCase();
                         const port = p.port || '';
                         const auth = p.uuid || p.password || '';
@@ -1835,8 +1935,10 @@
                         return; // 等待用户确认
                     }
 
-                    // 无重复时直接开始测试
+                    // 无重复时直接开始测试，测试完成后删除超时节点
                     await checkLocalConnectivity(targets);
+                    // 稍微等到一下确保状态更新
+                    setTimeout(() => deleteFailedNodes(), 100);
                 };
 
                 // 确认去重并测试的回调
@@ -1879,6 +1981,7 @@
 
                     // 开始测试
                     await checkLocalConnectivity(targets);
+                    setTimeout(() => deleteFailedNodes(), 100);
                 };
 
                 // YAML 生成
@@ -2045,8 +2148,18 @@
                     }
                 };
 
-                const deleteProxy = (id) => {
+                const deleteProxy = async (id) => {
                     proxies.value = proxies.value.filter(p => p.id !== id);
+                    try {
+                        await fetch('/api/proxies', {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ ids: [id] })
+                        });
+                        showToast('节点已从服务器删除');
+                    } catch (e) {
+                        console.error('Delete proxy failed', e);
+                    }
                 };
 
                 // --- Export Logic ---
@@ -2143,9 +2256,9 @@
                 const cloudResult = ref('');
 
                 // Show modal automatically when cloud loading starts
-                watch(cloudLoading, (newVal) => {
-                    if (newVal) showLogModal.value = true;
-                });
+                // watch(cloudLoading, (newVal) => {
+                //     if (newVal) showLogModal.value = true;
+                // });
 
                 const fetchCloudProxies = async () => {
                     try {
@@ -2168,7 +2281,7 @@
                     cloudLoading.value = true;
                     cloudResult.value = 'Running...';
                     serverLogs.value = [];
-                    showLogModal.value = true;
+                    showLogModal.value = true; // 手动点击显示日志窗口
 
                     try {
                         const res = await fetch('/api/fetch_all', { method: 'POST', body: JSON.stringify({ pages: 50 }) });
@@ -2402,7 +2515,7 @@
                                 // 刚检测到开始运行
                                 cloudLoading.value = true;
                                 serverLogs.value = []; // 清空旧日志
-                                showLogModal.value = true; // 自动打开日志窗口
+                                // showLogModal.value = true; // 自动打开日志窗口 (已禁用: 用户希望手动点击才显示)
                             }
 
                             // 实时更新日志
@@ -2424,10 +2537,10 @@
 
                                 await loadProxies(); // 重新加载节点列表
 
-                                // 自动关闭日志窗口 (延迟 3 秒)
-                                setTimeout(() => {
+                                // 自动关闭日志窗口 (已禁用: 用户希望手动控制)
+                                /* setTimeout(() => {
                                     showLogModal.value = false;
-                                }, 3000);
+                                }, 3000); */
                             }
                         }
                     } catch (e) {

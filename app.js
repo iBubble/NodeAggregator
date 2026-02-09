@@ -2010,7 +2010,7 @@ const server = http.createServer(async (req, res) => {
             // 格式化为 YYYY-MM-DD HH:mm:ss
             const pad = (n) => n.toString().padStart(2, '0');
             serverBootTime = `${beijingTime.getUTCFullYear()}-${pad(beijingTime.getUTCMonth() + 1)}-${pad(beijingTime.getUTCDate())} ${pad(beijingTime.getUTCHours())}:${pad(beijingTime.getUTCMinutes())}:${pad(beijingTime.getUTCSeconds())}`;
-            serverBootTimeRaw = beijingTime.toISOString();
+            serverBootTimeRaw = localDate.toISOString();
         } catch (e) {
             serverUptime = 'unknown';
         }
@@ -2035,6 +2035,47 @@ const server = http.createServer(async (req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
             res.end('[]');
         }
+        return;
+    }
+
+    // API: 删除普通节点 (Cloud proxies)
+    if (parsedUrl.pathname === '/api/proxies' && req.method === 'DELETE') {
+        let bodyRaw = '';
+        req.on('data', chunk => bodyRaw += chunk);
+        req.on('end', () => {
+            try {
+                const body = JSON.parse(bodyRaw);
+                const idsToDelete = body.ids || [];
+
+                if (!Array.isArray(idsToDelete) || idsToDelete.length === 0) {
+                    res.writeHead(400, { 'Content-Type': 'application/json', ...headers });
+                    res.end(JSON.stringify({ success: false, error: 'No IDs provided' }));
+                    return;
+                }
+
+                const proxiesFile = path.join(ROOT, 'proxies.json');
+                let proxies = [];
+                if (fs.existsSync(proxiesFile)) {
+                    proxies = JSON.parse(fs.readFileSync(proxiesFile, 'utf8'));
+                }
+
+                const deleteSet = new Set(idsToDelete);
+                const remaining = proxies.filter(p => !deleteSet.has(p.id));
+
+                fs.writeFileSync(proxiesFile, JSON.stringify(remaining, null, 2));
+                addLog(`API删除了 ${proxies.length - remaining.length} 个节点`, 'info');
+
+                res.writeHead(200, { 'Content-Type': 'application/json', ...headers });
+                res.end(JSON.stringify({
+                    success: true,
+                    deleted: proxies.length - remaining.length,
+                    remaining: remaining.length
+                }));
+            } catch (e) {
+                res.writeHead(500, { 'Content-Type': 'application/json', ...headers });
+                res.end(JSON.stringify({ success: false, error: e.message }));
+            }
+        });
         return;
     }
 

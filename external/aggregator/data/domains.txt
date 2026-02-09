@@ -527,7 +527,7 @@ https://www.networkportforward.top	@#@#		@#@#		@#@#
 https://alicmcn.ivansen.com	@#@#		@#@#		@#@#	
 https://ssp.ivansen.com	@#@#		@#@#		@#@#	
 https://in.fastss.de	@#@#		@#@#		@#@#	
-https://10rjc.com	@#@#		@#@#		@#@#	
+https://10rjc.com	@#@#		@#@#		@#@#	/api?scheme=
 https://servernode.store	@#@#		@#@#		@#@#	
 https://seclusion.pro	@#@#		@#@#		@#@#	
 https://1.starbebo.sbs	@#@#		@#@#		@#@#	
@@ -852,3 +852,4 @@ https://vip02.flyingcat.work	@#@#		@#@#		@#@#
 https://hmdydz.ilailian.com	@#@#		@#@#		@#@#	
 https://demo.panghu.wiki	@#@#		@#@#		@#@#	
 https://看片云.shop	@#@#	看片	@#@#		@#@#	
+https://xn--9kq838ftid.shop	@#@#	看片	@#@#		@#@#	
